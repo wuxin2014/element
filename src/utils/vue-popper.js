@@ -118,6 +118,7 @@ export default {
     },
 
     updatePopper() {
+      debugger;
       const popperJS = this.popperJS;
       if (popperJS) {
         popperJS.update();

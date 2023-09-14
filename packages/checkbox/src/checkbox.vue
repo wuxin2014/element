@@ -83,6 +83,7 @@
     computed: {
       model: {
         get() {
+          // 若是isGroup,返回就是数组
           return this.isGroup
             ? this.store : this.value !== undefined
               ? this.value : this.selfModel;
@@ -132,6 +133,7 @@
       },
 
       store() {
+        // this._checkboxGroup.value 拿到父级组件(el-checkbox-group)的value => v-model中的value 是数组
         return this._checkboxGroup ? this._checkboxGroup.value : this.value;
       },
 
@@ -162,8 +164,8 @@
     },
 
     props: {
-      value: {},
-      label: {},
+      value: {}, // 未指定类型，不是误解为对象
+      label: {}, // 未指定类型，不是误解为对象
       indeterminate: Boolean,
       disabled: Boolean,
       checked: Boolean,
