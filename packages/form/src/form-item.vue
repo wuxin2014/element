@@ -145,7 +145,7 @@
         return parent;
       },
       fieldValue() {
-        const model = this.form.model;
+        const model = this.form.model; // 获取parent即el-form的 model属性
         if (!model || !this.prop) { return; }
 
         let path = this.prop;
@@ -193,7 +193,7 @@
     methods: {
       validate(trigger, callback = noop) {
         this.validateDisabled = false;
-        const rules = this.getFilteredRule(trigger);
+        const rules = this.getFilteredRule(trigger); // 根据触发类型，过滤验证规则
         if ((!rules || rules.length === 0) && this.required === undefined) {
           callback();
           return true;
@@ -209,7 +209,7 @@
         }
         descriptor[this.prop] = rules;
 
-        const validator = new AsyncValidator(descriptor);
+        const validator = new AsyncValidator(descriptor); // 注意AsyncValidator
         const model = {};
 
         model[this.prop] = this.fieldValue;
@@ -219,7 +219,7 @@
           this.validateMessage = errors ? errors[0].message : '';
 
           callback(this.validateMessage, invalidFields);
-          this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.validateMessage || null);
+          this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.validateMessage || null); // 这一步什么作用
         });
       },
       clearValidate() {
@@ -241,6 +241,7 @@
         let prop = getPropByPath(model, path, true);
 
         this.validateDisabled = true;
+        // 重置为初始值
         if (Array.isArray(value)) {
           prop.o[prop.k] = [].concat(this.initialValue);
         } else {
@@ -255,14 +256,14 @@
         this.broadcast('ElTimeSelect', 'fieldReset', this.initialValue);
       },
       getRules() {
-        let formRules = this.form.rules;
-        const selfRules = this.rules;
+        let formRules = this.form.rules; // 整个表单验证规则
+        const selfRules = this.rules; // 自身验证规则
         const requiredRule = this.required !== undefined ? { required: !!this.required } : [];
 
         const prop = getPropByPath(formRules, this.prop || '');
-        formRules = formRules ? (prop.o[this.prop || ''] || prop.v) : [];
+        formRules = formRules ? (prop.o[this.prop || ''] || prop.v) : []; // 从表单验证规则中得到自身相关的验证规则
 
-        return [].concat(selfRules || formRules || []).concat(requiredRule);
+        return [].concat(selfRules || formRules || []).concat(requiredRule); // 优先取自身规则
       },
       getFilteredRule(trigger) {
         const rules = this.getRules();
@@ -306,10 +307,11 @@
       if (this.prop) {
         this.dispatch('ElForm', 'el.form.addField', [this]);
 
-        let initialValue = this.fieldValue;
+        let initialValue = this.fieldValue; // 获取初始值
         if (Array.isArray(initialValue)) {
           initialValue = [].concat(initialValue);
         }
+        // 给el-form-item 实例定义initailValue属性， 后面重置时用的着
         Object.defineProperty(this, 'initialValue', {
           value: initialValue
         });

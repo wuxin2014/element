@@ -129,6 +129,7 @@
           callback(true);
         }
         let invalidFields = {};
+        // 所有字段循环验证
         this.fields.forEach(field => {
           field.validate('', (message, field) => {
             if (message) {
@@ -145,6 +146,7 @@
           return promise;
         }
       },
+      // 验证单个字段
       validateField(props, cb) {
         props = [].concat(props);
         const fields = this.fields.filter(field => props.indexOf(field.prop) !== -1);

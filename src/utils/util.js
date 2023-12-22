@@ -51,7 +51,7 @@ export function getPropByPath(obj, path, strict) {
 
   let keyArr = path.split('.');
   let i = 0;
-  for (let len = keyArr.length; i < len - 1; ++i) {
+  for (let len = keyArr.length; i < len - 1; ++i) { // 注意len-1
     if (!tempObj && !strict) break;
     let key = keyArr[i];
     if (key in tempObj) {
@@ -65,8 +65,8 @@ export function getPropByPath(obj, path, strict) {
   }
   return {
     o: tempObj,
-    k: keyArr[i],
-    v: tempObj ? tempObj[keyArr[i]] : null
+    k: keyArr[i], // 最后一个属性key
+    v: tempObj ? tempObj[keyArr[i]] : null // 最后一个属性key对应的value
   };
 };
 
