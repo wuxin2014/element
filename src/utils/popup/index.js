@@ -68,8 +68,10 @@ export default {
 
   watch: {
     visible(val) {
+      debugger;
       if (val) {
-        if (this._opening) return;
+        if (this._opening) return; // this._opening 哪来的
+        // 判断是否已渲染
         if (!this.rendered) {
           this.rendered = true;
           Vue.nextTick(() => {
@@ -98,7 +100,7 @@ export default {
       }
       clearTimeout(this._openTimer);
 
-      const openDelay = Number(props.openDelay);
+      const openDelay = Number(props.openDelay); // 是否延时打开
       if (openDelay > 0) {
         this._openTimer = setTimeout(() => {
           this._openTimer = null;
@@ -131,6 +133,7 @@ export default {
           this._closing = false;
         }
         PopupManager.openModal(this._popupId, PopupManager.nextZIndex(), this.modalAppendToBody ? undefined : dom, props.modalClass, props.modalFade);
+        // lockScroll的作用
         if (props.lockScroll) {
           this.withoutHiddenClass = !hasClass(document.body, 'el-popup-parent--hidden');
           if (this.withoutHiddenClass) {

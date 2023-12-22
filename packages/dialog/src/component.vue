@@ -119,10 +119,11 @@
 
     watch: {
       visible(val) {
+        debugger;
         if (val) {
           this.closed = false;
           this.$emit('open');
-          this.$el.addEventListener('scroll', this.updatePopper);
+          this.$el.addEventListener('scroll', this.updatePopper); // 添加滚动监听
           this.$nextTick(() => {
             this.$refs.dialog.scrollTop = 0;
           });
@@ -175,12 +176,13 @@
       },
       hide(cancel) {
         if (cancel !== false) {
-          this.$emit('update:visible', false);
+          this.$emit('update:visible', false); // 注意'update:visible'事件名
           this.$emit('close');
-          this.closed = true;
+          this.closed = true; // closed字段作用是什么
         }
       },
       updatePopper() {
+        debugger;
         this.broadcast('ElSelectDropdown', 'updatePopper');
         this.broadcast('ElDropdownMenu', 'updatePopper');
       },

@@ -20,12 +20,14 @@ import FormDemo from './pages/FormDemo'
 import DialogDemo from './pages/DialogDemo'
 import TableSortDemo from './pages/TableSortDemo'
 import CarouselDemo from './pages/CarouselDemo'
+import TooltipDemo from './pages/TooltipDemo.vue'
 export default {
   components: {
     FormDemo,
     DialogDemo,
     TableSortDemo,
-    CarouselDemo
+    CarouselDemo,
+    TooltipDemo
   },
   data() {
     return {
@@ -46,6 +48,10 @@ export default {
         {
           value: 'DialogDemo',
           label: '弹窗'
+        },
+        {
+          value: 'TooltipDemo',
+          label: 'TooltipDemo'
         }
       ]
     };

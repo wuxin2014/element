@@ -1,8 +1,20 @@
 <template>
-  <div>
-    <h3>弹窗自定义滚动条问题</h3>
+  <div style="height: 1000px">
+    <el-button @click="isShow=true">弹窗自定义滚动条问题</el-button>
     <el-dialog title="收货地址" :visible.sync="isShow">
       <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="活动名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="活动名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="活动名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="活动名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
         <el-form-item label="活动名称">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -68,7 +80,7 @@
 export default {
   data() {
     return {
-      isShow: false,
+      isShow: true,
       form: {
         name: '',
         region: '',

@@ -64,7 +64,6 @@ export default {
   },
   beforeCreate() {
     if (this.$isServer) return;
-
     this.popperVM = new Vue({
       data: { node: '' },
       render(h) {
@@ -77,6 +76,7 @@ export default {
 
   render(h) {
     if (this.popperVM) {
+      // 更改实例的node字段，会触发更新，popper要渲染的元素, 注意ref="popper"
       this.popperVM.node = (
         <transition
           name={ this.transition }
@@ -96,23 +96,27 @@ export default {
           </div>
         </transition>);
     }
-
+    // el-tooltip组件真正渲染的元素
     const firstElement = this.getFirstElement();
     if (!firstElement) return null;
 
     const data = firstElement.data = firstElement.data || {};
-    data.staticClass = this.addTooltipClass(data.staticClass);
+    data.staticClass = this.addTooltipClass(data.staticClass); // 给data.staticClass赋值的作用：
 
     return firstElement;
   },
 
   mounted() {
-    this.referenceElm = this.$el;
+    this.referenceElm = this.$el; // 获取dom元素
+    // nodeType: 1为元素节点
     if (this.$el.nodeType === 1) {
+      // 为什么要添加两个dom atrr,作用是什么
       this.$el.setAttribute('aria-describedby', this.tooltipId);
       this.$el.setAttribute('tabindex', this.tabindex);
+      // 给el-tooltip渲染后元素添加监听事件
       on(this.referenceElm, 'mouseenter', this.show);
       on(this.referenceElm, 'mouseleave', this.hide);
+      // 注意：什么元素才能监听focus函数
       on(this.referenceElm, 'focus', () => {
         if (!this.$slots.default || !this.$slots.default.length) {
           this.handleFocus();
@@ -177,6 +181,7 @@ export default {
     },
 
     handleShowPopper() {
+      // 先判断expectedState的值
       if (!this.expectedState || this.manual) return;
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {

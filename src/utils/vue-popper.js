@@ -68,8 +68,9 @@ export default {
         this.$emit('input', val);
       }
     },
-
+    // 监听showPopper字段值的变更
     showPopper(val) {
+      debugger;
       if (this.disabled) return;
       val ? this.updatePopper() : this.destroyPopper();
       this.$emit('input', val);
@@ -78,6 +79,7 @@ export default {
 
   methods: {
     createPopper() {
+      debugger;
       if (this.$isServer) return;
       this.currentPlacement = this.currentPlacement || this.placement;
       if (!/^(top|bottom|left|right)(-start|-end)?$/g.test(this.currentPlacement)) {
@@ -85,7 +87,9 @@ export default {
       }
 
       const options = this.popperOptions;
+      // 获取popper dom元素
       const popper = this.popperElm = this.popperElm || this.popper || this.$refs.popper;
+      // 获取参考dom元素
       let reference = this.referenceElm = this.referenceElm || this.reference || this.$refs.reference;
 
       if (!reference &&
@@ -95,7 +99,9 @@ export default {
       }
 
       if (!popper || !reference) return;
+      // 在父级元素popper里追加剪头子元素
       if (this.visibleArrow) this.appendArrow(popper);
+      // 处理popperElm是否要追加到body上
       if (this.appendToBody) document.body.appendChild(this.popperElm);
       if (this.popperJS && this.popperJS.destroy) {
         this.popperJS.destroy();
@@ -104,6 +110,7 @@ export default {
       options.placement = this.currentPlacement;
       options.offset = this.offset;
       options.arrowOffset = this.arrowOffset;
+      // 重点部分计算定位坐标
       this.popperJS = new PopperJS(reference, popper, options);
       this.popperJS.onCreate(_ => {
         this.$emit('created', this);
@@ -118,7 +125,6 @@ export default {
     },
 
     updatePopper() {
-      debugger;
       const popperJS = this.popperJS;
       if (popperJS) {
         popperJS.update();
