@@ -15,6 +15,7 @@
     @mouseenter="hovering = true"
     @mouseleave="hovering = false"
   >
+    <!-- 单行文本输入框 -->
     <template v-if="type !== 'textarea'">
       <!-- 前置元素 -->
       <div class="el-input-group__prepend" v-if="$slots.prepend">
@@ -84,6 +85,7 @@
         <slot name="append"></slot>
       </div>
     </template>
+    <!-- 多行文本输入框 -->
     <textarea
       v-else
       :tabindex="tabindex"
@@ -213,7 +215,7 @@
         return merge({}, this.textareaCalcStyle, { resize: this.resize });
       },
       inputSize() {
-        return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size;
+        return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size; // this.$ELEMENT指什么
       },
       inputDisabled() {
         return this.disabled || (this.elForm || {}).disabled;
@@ -303,14 +305,14 @@
         };
       },
       handleBlur(event) {
-        this.focused = false;
+        this.focused = false; // 失去焦点
         this.$emit('blur', event);
         if (this.validateEvent) {
           this.dispatch('ElFormItem', 'el.form.blur', [this.value]);
         }
       },
       select() {
-        this.getInput().select();
+        this.getInput().select(); // 选中输入框中所有文本
       },
       resizeTextarea() {
         if (this.$isServer) return;
@@ -328,7 +330,7 @@
         this.textareaCalcStyle = calcTextareaHeight(this.$refs.textarea, minRows, maxRows);
       },
       setNativeInputValue() {
-        const input = this.getInput();
+        const input = this.getInput(); // 拿到输入框的元素
         if (!input) return;
         if (input.value === this.nativeInputValue) return;
         input.value = this.nativeInputValue;
@@ -338,6 +340,7 @@
         this.$emit('focus', event);
       },
       handleCompositionStart(event) {
+        // 在用户开始进行非直接输入的时候触发， 输入中文还未在输入框中
         this.$emit('compositionstart', event);
         this.isComposing = true;
       },
@@ -363,13 +366,14 @@
         // should remove the following line when we don't support IE
         if (event.target.value === this.nativeInputValue) return;
 
-        this.$emit('input', event.target.value);
+        this.$emit('input', event.target.value); // v-model input事件的回调
 
         // ensure native input value is controlled
         // see: https://github.com/ElemeFE/element/issues/12850
         this.$nextTick(this.setNativeInputValue);
       },
       handleChange(event) {
+        // 当输入框的值和上一次的值不同，并且输入框失去焦点，就会触发change事件
         this.$emit('change', event.target.value);
       },
       calcIconOffset(place) {
@@ -428,7 +432,7 @@
     },
 
     mounted() {
-      this.setNativeInputValue();
+      this.setNativeInputValue(); // 将属性value值赋值给原生input.value
       this.resizeTextarea();
       this.updateIconOffset();
     },

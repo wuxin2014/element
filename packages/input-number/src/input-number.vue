@@ -135,7 +135,7 @@
           if (newVal <= this.min) newVal = this.min;
           this.currentValue = newVal;
           this.userInput = null;
-          this.$emit('input', newVal);
+          this.$emit('input', newVal); // v-model input函数回调
         }
       }
     },
@@ -172,7 +172,7 @@
       },
       displayValue() {
         if (this.userInput !== null) {
-          return this.userInput;
+          return this.userInput; // 用户输入的值
         }
 
         let currentValue = this.currentValue;
@@ -253,7 +253,7 @@
         this.currentValue = newVal;
       },
       handleInput(value) {
-        this.userInput = value;
+        this.userInput = value; // 用户输入的值
       },
       handleInputChange(value) {
         const newVal = value === '' ? undefined : Number(value);

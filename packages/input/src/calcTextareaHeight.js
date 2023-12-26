@@ -29,7 +29,7 @@ const CONTEXT_STYLE = [
 ];
 
 function calculateNodeStyling(targetElement) {
-  const style = window.getComputedStyle(targetElement);
+  const style = window.getComputedStyle(targetElement); // 获取dom元素计算样式
 
   const boxSizing = style.getPropertyValue('box-sizing');
 
@@ -50,13 +50,14 @@ function calculateNodeStyling(targetElement) {
   return { contextStyle, paddingSize, borderSize, boxSizing };
 }
 
+// 计算多文本输入框元素的高度
 export default function calcTextareaHeight(
-  targetElement,
-  minRows = 1,
-  maxRows = null
+  targetElement, // 目标元素
+  minRows = 1, // 最少行数
+  maxRows = null // 最多行数
 ) {
   if (!hiddenTextarea) {
-    hiddenTextarea = document.createElement('textarea');
+    hiddenTextarea = document.createElement('textarea'); // 创建多文本输入框元素(隐藏的)
     document.body.appendChild(hiddenTextarea);
   }
 
@@ -67,10 +68,10 @@ export default function calcTextareaHeight(
     contextStyle
   } = calculateNodeStyling(targetElement);
 
-  hiddenTextarea.setAttribute('style', `${contextStyle};${HIDDEN_STYLE}`);
-  hiddenTextarea.value = targetElement.value || targetElement.placeholder || '';
+  hiddenTextarea.setAttribute('style', `${contextStyle};${HIDDEN_STYLE}`); // 设置元素样式属性, HIDDEN_STYLE注意有height属性值为0，超出隐藏
+  hiddenTextarea.value = targetElement.value || targetElement.placeholder || ''; // 设置元素值
 
-  let height = hiddenTextarea.scrollHeight;
+  let height = hiddenTextarea.scrollHeight; // 一个元素内容高度的度量，包括元素的内边距，但不包括元素的边框、外边距以及水平滚动条
   const result = {};
 
   if (boxSizing === 'border-box') {
@@ -80,7 +81,7 @@ export default function calcTextareaHeight(
   }
 
   hiddenTextarea.value = '';
-  let singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
+  let singleRowHeight = hiddenTextarea.scrollHeight - paddingSize; // 单行文本高度
 
   if (minRows !== null) {
     let minHeight = singleRowHeight * minRows;
@@ -98,7 +99,7 @@ export default function calcTextareaHeight(
     height = Math.min(maxHeight, height);
   }
   result.height = `${ height }px`;
-  hiddenTextarea.parentNode && hiddenTextarea.parentNode.removeChild(hiddenTextarea);
+  hiddenTextarea.parentNode && hiddenTextarea.parentNode.removeChild(hiddenTextarea); // 移除元素
   hiddenTextarea = null;
   return result;
 };
