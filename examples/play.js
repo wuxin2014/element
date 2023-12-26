@@ -5,6 +5,7 @@ import 'packages/theme-chalk/src/index.scss';
 // import APP from './play/pages/TooltipDemo'
 import App from './play/pages/InputDemo'
 
+debugger
 Vue.use(Element);
 // Vue.use(Element, { size: 'small', zIndex: 3000 });
 Vue.prototype.$ELEMENT = { size: 'small', zIndex: 3000 };

@@ -106,7 +106,7 @@ export default {
       if (this.popperJS && this.popperJS.destroy) {
         this.popperJS.destroy();
       }
-
+      // 自定义options
       options.placement = this.currentPlacement;
       options.offset = this.offset;
       options.arrowOffset = this.arrowOffset;

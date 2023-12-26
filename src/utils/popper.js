@@ -163,7 +163,7 @@
         }
 
         // with {} we create a new object with the options inside it
-        this._options = Object.assign({}, DEFAULTS, options);
+        this._options = Object.assign({}, DEFAULTS, options); // 自定义选项跟默认选项合并
 
         // refactoring modifiers' list
         this._options.modifiers = this._options.modifiers.map(function(modifier){
@@ -222,6 +222,7 @@
      * @memberof Popper
      */
     Popper.prototype.update = function() {
+        debugger
         var data = { instance: this, styles: {} };
 
         // store placement inside the data object, modifiers will be able to edit `placement` if needed
@@ -232,7 +233,7 @@
         // compute the popper and reference offsets and put them inside data.offsets
         data.offsets = this._getOffsets(this._popper, this._reference, data.placement);
 
-        // get boundaries
+        // get boundaries 边界处理
         data.boundaries = this._getBoundaries(data, this._options.boundariesPadding, this._options.boundariesElement);
 
         data = this.runModifiers(data, this._options.modifiers);
@@ -374,7 +375,7 @@
      * @returns {String} position
      */
     Popper.prototype._getPosition = function(popper, reference) {
-        var container = getOffsetParent(reference);
+        var container = getOffsetParent(reference); // 获取参考元素的父元素(带有定位的，无就指向html元素)
 
         if (this._options.forceAbsolute) {
             return 'absolute';
@@ -396,19 +397,20 @@
      * @returns {Object} An object containing the offsets which will be applied to the popper
      */
     Popper.prototype._getOffsets = function(popper, reference, placement) {
-        placement = placement.split('-')[0];
-        var popperOffsets = {};
+        placement = placement.split('-')[0]; // 分割后数组取第0个
+        var popperOffsets = {}; // popper元素的偏移值对象
 
         popperOffsets.position = this.state.position;
         var isParentFixed = popperOffsets.position === 'fixed';
 
-        //
-        // Get reference element position
-        //
+        /**
+         * Get reference element position 参考元素偏移量对象
+         * 1. popper的父级元素为null => 经处理最后指向html元素
+         */ 
         var referenceOffsets = getOffsetRectRelativeToCustomParent(reference, getOffsetParent(popper), isParentFixed);
 
         //
-        // Get popper sizes
+        // Get popper sizes 获取popper的宽高
         //
         var popperRect = getOuterSizes(popper);
 
@@ -510,7 +512,7 @@
                 left: 0
             };
         } else if (boundariesElement === 'viewport') {
-            var offsetParent = getOffsetParent(this._popper);
+            var offsetParent = getOffsetParent(this._popper); // 获取popper的offsetParent
             var scrollParent = getScrollParent(this._popper);
             var offsetParentRect = getOffsetRect(offsetParent);
 
@@ -702,7 +704,7 @@
     Popper.prototype.modifiers.preventOverflow = function(data) {
         var order = this._options.preventOverflowOrder;
         var popper = getPopperClientRect(data.offsets.popper);
-
+        // 处理边界问题
         var check = {
             left: function() {
                 var left = popper.left;
@@ -957,7 +959,7 @@
         // NOTE: 1 DOM access here
         var _display = element.style.display, _visibility = element.style.visibility;
         element.style.display = 'block'; element.style.visibility = 'hidden';
-        var calcWidthToForceRepaint = element.offsetWidth;
+        var calcWidthToForceRepaint = element.offsetWidth; // 元素宽度(width + padding + border)
 
         // original method
         var styles = root.getComputedStyle(element);
@@ -1038,8 +1040,8 @@
      * @returns {Element} offset parent
      */
     function getOffsetParent(element) {
-        // NOTE: 1 DOM access here
-        var offsetParent = element.offsetParent;
+        // NOTE: 1 DOM access here // document.documentElement => html
+        var offsetParent = element.offsetParent; // 找有定位的父级
         return offsetParent === root.document.body || !offsetParent ? root.document.documentElement : offsetParent;
     }
 
