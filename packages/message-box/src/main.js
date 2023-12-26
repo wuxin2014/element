@@ -120,6 +120,7 @@ const showNextMsg = () => {
   }
 };
 
+// 导出的MessageBox函数
 const MessageBox = function(options, callback) {
   if (Vue.prototype.$isServer) return;
   if (typeof options === 'string' || isVNode(options)) {
@@ -135,6 +136,7 @@ const MessageBox = function(options, callback) {
 
   if (typeof Promise !== 'undefined') {
     return new Promise((resolve, reject) => { // eslint-disable-line
+      // 为什么加入msgQueue
       msgQueue.push({
         options: merge({}, defaults, MessageBox.defaults, options),
         callback: callback,

@@ -3,7 +3,7 @@ import Main from './main.vue';
 import { PopupManager } from 'element-ui/src/utils/popup';
 import { isVNode } from 'element-ui/src/utils/vdom';
 import { isObject } from 'element-ui/src/utils/types';
-let MessageConstructor = Vue.extend(Main);
+let MessageConstructor = Vue.extend(Main); // 构造子类构造函数
 
 let instance;
 let instances = [];
@@ -23,6 +23,7 @@ const Message = function(options) {
   options.onClose = function() {
     Message.close(id, userOnClose);
   };
+  // 获取组件实例
   instance = new MessageConstructor({
     data: options
   });
@@ -31,8 +32,11 @@ const Message = function(options) {
     instance.$slots.default = [instance.message];
     instance.message = null;
   }
+  // 手动挂载
   instance.$mount();
+  // 追加到document.body里
   document.body.appendChild(instance.$el);
+  // 每个message的偏移量 
   let verticalOffset = options.offset || 20;
   instances.forEach(item => {
     verticalOffset += item.$el.offsetHeight + 16;
@@ -40,12 +44,13 @@ const Message = function(options) {
   instance.verticalOffset = verticalOffset;
   instance.visible = true;
   instance.$el.style.zIndex = PopupManager.nextZIndex();
-  instances.push(instance);
+  instances.push(instance); // push instance
   return instance;
 };
 
 ['success', 'warning', 'info', 'error'].forEach(type => {
   Message[type] = (options) => {
+    // 每次调用都会生成新的实例子
     if (isObject(options) && !isVNode(options)) {
       return Message({
         ...options,

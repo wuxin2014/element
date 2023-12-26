@@ -3,7 +3,7 @@ import Main from './main.vue';
 import merge from 'element-ui/src/utils/merge';
 import { PopupManager } from 'element-ui/src/utils/popup';
 import { isVNode } from 'element-ui/src/utils/vdom';
-const NotificationConstructor = Vue.extend(Main);
+const NotificationConstructor = Vue.extend(Main); // 构造子类构造函数
 
 let instance;
 let instances = [];
@@ -20,6 +20,7 @@ const Notification = function(options) {
     Notification.close(id, userOnClose);
   };
 
+  // 构造函数实例化
   instance = new NotificationConstructor({
     data: options
   });
@@ -29,10 +30,12 @@ const Notification = function(options) {
     options.message = 'REPLACED_BY_VNODE';
   }
   instance.id = id;
+  // 手动挂载
   instance.$mount();
+  // 追加元素到body上
   document.body.appendChild(instance.$el);
   instance.visible = true;
-  instance.dom = instance.$el;
+  instance.dom = instance.$el; // 获取实例dom元素
   instance.dom.style.zIndex = PopupManager.nextZIndex();
 
   let verticalOffset = options.offset || 0;
