@@ -10,7 +10,7 @@ export default function scrollIntoView(container, selected) {
 
   const offsetParents = [];
   let pointer = selected.offsetParent;
-  while (pointer && container !== pointer && container.contains(pointer)) {
+  while (pointer && container !== pointer && container.contains(pointer)) { // Node.contains()
     offsetParents.push(pointer);
     pointer = pointer.offsetParent;
   }

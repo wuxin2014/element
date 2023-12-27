@@ -180,7 +180,6 @@ const components = [
   CollapseTransition
 ];
 
-// 插件方式 导入Element组件
 const install = function(Vue, opts = {}) {
   locale.use(opts.locale);
   locale.i18n(opts.i18n);

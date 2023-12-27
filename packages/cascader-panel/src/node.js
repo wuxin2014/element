@@ -19,9 +19,9 @@ export default class Node {
   initState() {
     const { value: valueKey, label: labelKey } = this.config;
 
-    this.value = this.data[valueKey];
-    this.label = this.data[labelKey];
-    this.pathNodes = this.calculatePathNodes();
+    this.value = this.data[valueKey]; // 获取value值
+    this.label = this.data[labelKey]; // 获取label值
+    this.pathNodes = this.calculatePathNodes(); // 得到pathNodes
     this.path = this.pathNodes.map(node => node.value);
     this.pathLabels = this.pathNodes.map(node => node.label);
 
@@ -33,8 +33,8 @@ export default class Node {
   initChildren() {
     const { config } = this;
     const childrenKey = config.children;
-    const childrenData = this.data[childrenKey];
-    this.hasChildren = Array.isArray(childrenData);
+    const childrenData = this.data[childrenKey]; // 获取children
+    this.hasChildren = Array.isArray(childrenData); // 是否有children
     this.children = (childrenData || []).map(child => new Node(child, config, this));
   }
 
@@ -56,7 +56,7 @@ export default class Node {
       this.hasChildren = !isLeaf;
       return isLeaf;
     }
-    return !hasChildren;
+    return !hasChildren; // 无children代表叶子节点
   }
 
   calculatePathNodes() {

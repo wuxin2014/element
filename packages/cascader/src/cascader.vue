@@ -394,6 +394,7 @@ export default {
       };
     },
     toggleDropDownVisible(visible) {
+      debugger;
       if (this.isDisabled) return;
 
       const { dropDownVisible } = this;

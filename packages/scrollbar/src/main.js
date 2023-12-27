@@ -35,7 +35,7 @@ export default {
 
   computed: {
     wrap() {
-      return this.$refs.wrap;
+      return this.$refs.wrap; // 指哪
     }
   },
 
@@ -56,11 +56,14 @@ export default {
         style = gutterStyle;
       }
     }
+    // 视图
     const view = h(this.tag, {
       class: ['el-scrollbar__view', this.viewClass],
       style: this.viewStyle,
       ref: 'resize'
     }, this.$slots.default);
+
+    // this.$refs.wrap的指向
     const wrap = (
       <div
         ref="wrap"

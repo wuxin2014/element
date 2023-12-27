@@ -22,9 +22,9 @@ export default class Store {
 
   initNodes(data) {
     data = coerceTruthyValueToArray(data);
-    this.nodes = data.map(nodeData => new Node(nodeData, this.config));
-    this.flattedNodes = this.getFlattedNodes(false, false);
-    this.leafNodes = this.getFlattedNodes(true, false);
+    this.nodes = data.map(nodeData => new Node(nodeData, this.config)); // 获取所有节点
+    this.flattedNodes = this.getFlattedNodes(false, false); // 节点数组打平
+    this.leafNodes = this.getFlattedNodes(true, false); // 叶子节点数组打平
   }
 
   appendNode(nodeData, parentNode) {

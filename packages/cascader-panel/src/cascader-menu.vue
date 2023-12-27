@@ -109,6 +109,7 @@ export default {
   },
 
   render(h) {
+    debugger;
     const { isEmpty, menuId } = this;
     const events = { nativeOn: {} };
 

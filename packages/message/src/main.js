@@ -36,7 +36,7 @@ const Message = function(options) {
   instance.$mount();
   // 追加到document.body里
   document.body.appendChild(instance.$el);
-  // 每个message的偏移量 
+  // 每个message的偏移量
   let verticalOffset = options.offset || 20;
   instances.forEach(item => {
     verticalOffset += item.$el.offsetHeight + 16;

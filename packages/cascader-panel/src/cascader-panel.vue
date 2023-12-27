@@ -1,8 +1,8 @@
 <template>
   <div
     :class="[
-      'el-cascader-panel',
-      border && 'is-bordered'
+    'el-cascader-panel',
+    border && 'is-bordered'
     ]"
     @keydown="handleKeyDown">
     <cascader-menu
@@ -44,7 +44,7 @@ const DefaultProps = {
   hoverThreshold: 500
 };
 
-const isLeaf = el => !el.getAttribute('aria-owns');
+const isLeaf = el => !el.getAttribute('aria-owns'); // 是否是叶子节点，dom元素上无aria-owns属性的，属于叶子节点
 
 const getSibling = (el, distance) => {
   const { parentNode } = el;
@@ -122,10 +122,10 @@ export default {
       return this.config.multiple;
     },
     checkStrictly() {
-      return this.config.checkStrictly;
+      return this.config.checkStrictly; // 父子节点取消选中关联，是否严格的遵守父子节点不互相关联
     },
     leafOnly() {
-      return !this.checkStrictly;
+      return !this.checkStrictly; // 是否只是叶子节点
     },
     isHoverMenu() {
       return this.config.expandTrigger === 'hover';
@@ -157,6 +157,7 @@ export default {
   },
 
   mounted() {
+    debugger;
     if (!this.isEmptyValue(this.value)) {
       this.syncCheckedValue();
     }
@@ -164,12 +165,13 @@ export default {
 
   methods: {
     initStore() {
+      debugger;
       const { config, options } = this;
       if (config.lazy && isEmpty(options)) {
         this.lazyLoad();
       } else {
         this.store = new Store(options, config);
-        this.menus = [this.store.getNodes()];
+        this.menus = [this.store.getNodes()]; // this.store.getNodes()本身是数组，然后又放到了数组中
         this.syncMenuState();
       }
     },
@@ -313,7 +315,7 @@ export default {
         if (Array.isArray(this.checkedValue)) {
           const nodeValue = this.checkedValue[this.loadCount++];
           const valueKey = this.config.value;
-          const leafKey = this.config.leaf;
+          const leafKey = this.config.leaf; // 是否为叶子节点的标志位, 默认字段是'leaf'
 
           if (Array.isArray(dataList) && dataList.filter(item => item[valueKey] === nodeValue).length > 0) {
             const checkedNode = this.store.getNodeByValue(nodeValue);

@@ -25,7 +25,7 @@
         return this.panel.config;
       },
       isLeaf() {
-        return this.node.isLeaf;
+        return this.node.isLeaf; // 在哪里赋值的？ node中isLeaf
       },
       isDisabled() {
         return this.node.isDisabled;
@@ -52,6 +52,7 @@
 
     methods: {
       handleExpand() {
+        debugger
         const { panel, node, isDisabled, config } = this;
         const { multiple, checkStrictly } = config;
 
@@ -75,6 +76,7 @@
       },
 
       handleCheckChange() {
+        debugger
         const { panel, value, node } = this;
         panel.handleCheckChange(value);
         panel.handleExpand(node);
@@ -217,6 +219,7 @@
           this.$emit('expand', e);
         };
       }
+      // 若是叶子节点
       if (isLeaf && !isDisabled && !checkStrictly && !multiple) {
         events.on.click = this.handleCheckChange;
       }
