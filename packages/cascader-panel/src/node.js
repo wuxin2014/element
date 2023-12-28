@@ -95,7 +95,7 @@ export default class Node {
       ? checkedValue.some(val => isEqual(val, value))
       : isEqual(checkedValue, value);
   }
-
+  // 这以及后面待细看
   broadcast(event, ...args) {
     const handlerName = `onParent${capitalize(event)}`;
 
@@ -132,7 +132,7 @@ export default class Node {
 
     this.setCheckState(checked);
   }
-
+  // 设置node的checked属性值
   setCheckState(checked) {
     const totalNum = this.children.length;
     const checkedNum = this.children.reduce((c, p) => {

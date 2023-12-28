@@ -346,6 +346,7 @@ export default {
   },
 
   mounted() {
+    debugger
     const { input } = this.$refs;
     if (input && input.$el) {
       this.inputInitialHeight = input.$el.offsetHeight || InputSizeMap[this.realSize] || 40;
@@ -355,6 +356,7 @@ export default {
       this.computePresentContent();
     }
 
+    // 定义防抖函数
     this.filterHandler = debounce(this.debounce, () => {
       const { inputValue } = this;
 
@@ -373,7 +375,7 @@ export default {
       }
     });
 
-    addResizeListener(this.$el, this.updateStyle);
+    addResizeListener(this.$el, this.updateStyle); // 注意ResizeObserver监听执行后，立马会走this.updateStyle函数， 但是用了debounce包装函数
   },
 
   beforeDestroy() {
@@ -417,7 +419,9 @@ export default {
       this.inputValue = this.presentText;
       this.doDestroy();
     },
+    // 触发时机：事件当前元素聚焦后，摁键盘进行选择
     handleKeyDown(event) {
+      debugger
       switch (event.keyCode) {
         case KeyCode.enter:
           this.toggleDropDownVisible();
@@ -626,6 +630,7 @@ export default {
       this.$emit('remove-tag', val);
     },
     updateStyle() {
+      debugger;
       const { $el, inputInitialHeight } = this;
       if (this.$isServer || !$el) return;
 
@@ -641,7 +646,7 @@ export default {
         const suggestionList = suggestionPanelEl.querySelector('.el-cascader__suggestion-list');
         suggestionList.style.minWidth = inputInner.offsetWidth + 'px';
       }
-
+      // 根据tags容器重新设置的高度
       if (tags) {
         const offsetHeight = Math.round(tags.getBoundingClientRect().height);
         const height = Math.max(offsetHeight + 6, inputInitialHeight) + 'px';

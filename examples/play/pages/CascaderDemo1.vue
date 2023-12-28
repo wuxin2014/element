@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-cascader v-model="value" :options="options" @change="handleChange" :appendToBody="false" popperClass="dd"></el-cascader>
+        <el-cascader v-model="value" :props="props" :options="options" @change="handleChange" :appendToBody="false" popperClass="dd"></el-cascader>
         <!-- <el-cascader :options="options">
             <template slot-scope="{ node, data }">
                 <span>{{ data.label }}</span>
@@ -14,7 +14,10 @@
 export default {
     data() {
         return {
-            value: [],
+            props: {
+                multiple: true
+            },
+            value: [["zhinan", "shejiyuanze", "yizhi"], ["zhinan", "shejiyuanze", "fankui"]],
             options: [{
                 value: 'zhinan',
                 label: '指南',
@@ -213,8 +216,8 @@ export default {
         }
     },
     methods: {
-        handleChange() {
-
+        handleChange(val) {
+            console.log('val===', val)
         }
     }
 }

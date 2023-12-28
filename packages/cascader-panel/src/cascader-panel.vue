@@ -368,7 +368,7 @@ export default {
     getCheckedNodes(leafOnly) {
       const { checkedValue, multiple } = this;
       if (multiple) {
-        const nodes = this.getFlattedNodes(leafOnly);
+        const nodes = this.getFlattedNodes(leafOnly); // 获取所有叶子节点
         return nodes.filter(node => node.checked);
       } else {
         return this.isEmptyValue(checkedValue)
