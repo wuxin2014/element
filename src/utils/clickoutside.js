@@ -6,7 +6,7 @@ const ctx = '@@clickoutsideContext';
 
 let startClick;
 let seed = 0;
-
+// 给document添加mousedown,mouseup事件
 !Vue.prototype.$isServer && on(document, 'mousedown', e => (startClick = e));
 
 !Vue.prototype.$isServer && on(document, 'mouseup', e => {
@@ -29,7 +29,7 @@ function createDocumentHandler(el, binding, vnode) {
     if (binding.expression &&
       el[ctx].methodName &&
       vnode.context[el[ctx].methodName]) {
-      vnode.context[el[ctx].methodName]();
+      vnode.context[el[ctx].methodName](); // vnode的实例属性下方法调用
     } else {
       el[ctx].bindingFn && el[ctx].bindingFn();
     }

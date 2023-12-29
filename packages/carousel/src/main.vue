@@ -211,6 +211,7 @@ export default {
     },
 
     resetItemPosition(oldIndex) {
+      debugger
       this.items.forEach((item, index) => {
         item.translateItem(index, this.activeIndex, oldIndex);
       });
@@ -297,6 +298,7 @@ export default {
   },
 
   mounted() {
+    debugger
     this.updateItems();
     this.$nextTick(() => {
       addResizeListener(this.$el, this.resetItemPosition);

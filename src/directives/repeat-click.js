@@ -14,7 +14,7 @@ export default {
       clearInterval(interval);
       interval = null;
     };
-
+    // 监听mousedown事件
     on(el, 'mousedown', (e) => {
       if (e.button !== 0) return;
       startTime = Date.now();

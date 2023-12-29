@@ -49,17 +49,17 @@
     methods: {
       processIndex(index, activeIndex, length) {
         if (activeIndex === 0 && index === length - 1) {
-          return -1;
+          return -1; // 放置到最左侧
         } else if (activeIndex === length - 1 && index === 0) {
-          return length;
+          return length; // 放置到最右侧
         } else if (index < activeIndex - 1 && activeIndex - index >= length / 2) {
-          return length + 1;
+          return length + 1; // 放置到右侧+1
         } else if (index > activeIndex + 1 && index - activeIndex >= length / 2) {
-          return -2;
+          return -2; // 放置到左侧-1
         }
         return index;
       },
-
+      // 什么规律，看不出来
       calcCardTranslate(index, activeIndex) {
         const parentWidth = this.$parent.$el.offsetWidth;
         if (this.inStage) {
@@ -73,9 +73,9 @@
 
       calcTranslate(index, activeIndex, isVertical) {
         const distance = this.$parent.$el[isVertical ? 'offsetHeight' : 'offsetWidth'];
-        return distance * (index - activeIndex);
+        return distance * (index - activeIndex); // 往左跟往右
       },
-
+      // 重点方法
       translateItem(index, activeIndex, oldIndex) {
         const parentType = this.$parent.type;
         const parentDirection = this.parentDirection;
@@ -87,14 +87,16 @@
           index = this.processIndex(index, activeIndex, length);
         }
         if (parentType === 'card') {
+          // 卡片类型轮播平移计算
           if (parentDirection === 'vertical') {
             console.warn('[Element Warn][Carousel]vertical direction is not supported in card mode');
           }
-          this.inStage = Math.round(Math.abs(index - activeIndex)) <= 1;
+          this.inStage = Math.round(Math.abs(index - activeIndex)) <= 1; // 是否在正中央
           this.active = index === activeIndex;
-          this.translate = this.calcCardTranslate(index, activeIndex);
-          this.scale = this.active ? 1 : CARD_SCALE;
+          this.translate = this.calcCardTranslate(index, activeIndex); // 平移计算
+          this.scale = this.active ? 1 : CARD_SCALE; // 激活item不缩放，其他缩放
         } else {
+          // 普通类型轮播平移计算
           this.active = index === activeIndex;
           const isVertical = parentDirection === 'vertical';
           this.translate = this.calcTranslate(index, activeIndex, isVertical);
