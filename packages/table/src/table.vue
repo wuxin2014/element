@@ -14,6 +14,7 @@
     }, tableSize ? `el-table--${ tableSize }` : '']"
     @mouseleave="handleMouseLeave($event)">
     <div class="hidden-columns" ref="hiddenColumns"><slot></slot></div>
+    <!-- 表头 -->
     <div
       v-if="showHeader"
       v-mousewheel="handleHeaderFooterMousewheel"
@@ -29,6 +30,7 @@
         }">
       </table-header>
     </div>
+    <!-- 表的内容 -->
     <div
       class="el-table__body-wrapper"
       ref="bodyWrapper"
@@ -61,6 +63,7 @@
         <slot name="append"></slot>
       </div>
     </div>
+    <!-- 表尾 -->
     <div
       v-if="showSummary"
       v-show="data && data.length > 0"
