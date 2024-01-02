@@ -50,11 +50,11 @@ export const parseDate = function(string, format) {
 export const getDayCountOfMonth = function(year, month) {
   if (isNaN(+month)) return 31;
 
-  return new Date(year, +month + 1, 0).getDate();
+  return new Date(year, +month + 1, 0).getDate(); // 注意第二个参数是month+1, 第3个参数为0, 是获取这个月的总天数
 };
 
 export const getDayCountOfYear = function(year) {
-  const isLeapYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
+  const isLeapYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0); // 是否是闰年
   return isLeapYear ? 366 : 365;
 };
 
@@ -76,8 +76,8 @@ export const nextDate = function(date, amount = 1) {
 };
 
 export const getStartDateOfMonth = function(year, month) {
-  const result = new Date(year, month, 1);
-  const day = result.getDay();
+  const result = new Date(year, month, 1); // 从1号开始
+  const day = result.getDay(); // 获取是星期几的值(0-6)
 
   if (day === 0) {
     return prevDate(result, 7);

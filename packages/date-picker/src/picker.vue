@@ -502,7 +502,7 @@ export default {
     triggerClass() {
       return this.prefixIcon || (this.type.indexOf('time') !== -1 ? 'el-icon-time' : 'el-icon-date');
     },
-
+    // 这个需要看下
     selectionMode() {
       if (this.type === 'week') {
         return 'week';
@@ -529,6 +529,7 @@ export default {
     },
 
     displayValue() {
+      // 展示值格式化处理
       const formattedValue = formatAsFormatAndType(this.parsedValue, this.format, this.type, this.rangeSeparator);
       if (Array.isArray(this.userInput)) {
         return [
@@ -832,7 +833,7 @@ export default {
 
     showPicker() {
       if (this.$isServer) return;
-      if (!this.picker) {
+      if (!this.picker) { // this.picker是什么
         this.mountPicker();
       }
       this.pickerVisible = this.picker.visible = true;
@@ -846,9 +847,10 @@ export default {
         this.picker.adjustSpinners && this.picker.adjustSpinners();
       });
     },
-
+    // 挂载picker panel组件
     mountPicker() {
-      this.picker = new Vue(this.panel).$mount();
+      this.picker = new Vue(this.panel).$mount(); // 手动挂载this.panel组件
+      // 手动给实例属性赋值
       this.picker.defaultValue = this.defaultValue;
       this.picker.defaultTime = this.defaultTime;
       this.picker.popperClass = this.popperClass;
@@ -858,6 +860,7 @@ export default {
       this.picker.selectionMode = this.selectionMode;
       this.picker.unlinkPanels = this.unlinkPanels;
       this.picker.arrowControl = this.arrowControl || this.timeArrowControl || false;
+      // 监听format属性的变化
       this.$watch('format', (format) => {
         this.picker.format = format;
       });
@@ -888,18 +891,20 @@ export default {
         }
       };
       updateOptions();
+      // 监听pickerOptions对象属性的变化
       this.unwatchPickerOptions = this.$watch('pickerOptions', () => updateOptions(), { deep: true });
-      this.$el.appendChild(this.picker.$el);
+      this.$el.appendChild(this.picker.$el); // 手动追加元素
       this.picker.resetView && this.picker.resetView();
 
       this.picker.$on('dodestroy', this.doDestroy);
+      // this.picker 注册pick监听事件, 值的回调显示
       this.picker.$on('pick', (date = '', visible = false) => {
         this.userInput = null;
         this.pickerVisible = this.picker.visible = visible;
         this.emitInput(date);
         this.picker.resetView && this.picker.resetView();
       });
-
+      // this.picker 注册select-range监听事件, 值的回调显示
       this.picker.$on('select-range', (start, end, pos) => {
         if (this.refInput.length === 0) return;
         if (!pos || pos === 'min') {
@@ -911,7 +916,7 @@ export default {
         }
       });
     },
-
+    // 卸载picker panel组件
     unmountPicker() {
       if (this.picker) {
         this.picker.$destroy();

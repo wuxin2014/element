@@ -116,7 +116,7 @@
       },
 
       year() {
-        return this.date.getFullYear();
+        return this.date.getFullYear(); // date是对象
       },
 
       month() {
@@ -129,10 +129,10 @@
 
       rows() {
         // TODO: refactory rows / getCellClasses
-        const date = new Date(this.year, this.month, 1);
-        let day = getFirstDayOfMonth(date); // day of first day
-        const dateCountOfMonth = getDayCountOfMonth(date.getFullYear(), date.getMonth());
-        const dateCountOfLastMonth = getDayCountOfMonth(date.getFullYear(), (date.getMonth() === 0 ? 11 : date.getMonth() - 1));
+        const date = new Date(this.year, this.month, 1); // 当前月第一天开始
+        let day = getFirstDayOfMonth(date); // day of first day // 这个月第一天是星期几
+        const dateCountOfMonth = getDayCountOfMonth(date.getFullYear(), date.getMonth()); // 这个月的总天数
+        const dateCountOfLastMonth = getDayCountOfMonth(date.getFullYear(), (date.getMonth() === 0 ? 11 : date.getMonth() - 1)); // 上个月的总天数
 
         day = (day === 0 ? 7 : day);
 
@@ -164,7 +164,7 @@
             cell.type = 'normal';
 
             const index = i * 7 + j;
-            const time = nextDate(startDate, index - offset).getTime();
+            const time = nextDate(startDate, index - offset).getTime(); // 开始日期的下个日期 时间戳
             cell.inRange = time >= getDateTimestamp(this.minDate) && time <= getDateTimestamp(this.maxDate);
             cell.start = this.minDate && time === getDateTimestamp(this.minDate);
             cell.end = this.maxDate && time === getDateTimestamp(this.maxDate);
@@ -174,8 +174,9 @@
               cell.type = 'today';
             }
 
-            if (i >= 0 && i <= 1) {
-              const numberOfDaysFromPreviousMonth = day + offset < 0 ? 7 + day + offset : day + offset;
+            // 这步计算-重点关注
+            if (i >= 0 && i <= 1) { // 上个月最多也就占两排
+              const numberOfDaysFromPreviousMonth = day + offset < 0 ? 7 + day + offset : day + offset; // 开头上个月应占几天
 
               if (j + i * 7 >= numberOfDaysFromPreviousMonth) {
                 cell.text = count++;
@@ -397,8 +398,8 @@
 
         if (target.tagName !== 'TD') return;
 
-        const row = target.parentNode.rowIndex - 1;
-        const column = this.selectionMode === 'week' ? 1 : target.cellIndex;
+        const row = target.parentNode.rowIndex - 1; // 获取行数
+        const column = this.selectionMode === 'week' ? 1 : target.cellIndex; // 获取列数
         const cell = this.rows[row][column];
 
         if (cell.disabled || cell.type === 'week') return;

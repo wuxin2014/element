@@ -13,7 +13,7 @@ const getPanel = function(type) {
 };
 
 export default {
-  mixins: [Picker],
+  mixins: [Picker], // 不太理解，Picker不是组件吗
 
   name: 'ElDatePicker',
 
@@ -28,9 +28,9 @@ export default {
   watch: {
     type(type) {
       if (this.picker) {
-        this.unmountPicker();
+        this.unmountPicker(); // 混入picker中的方法
         this.panel = getPanel(type);
-        this.mountPicker();
+        this.mountPicker(); // 混入picker中的方法
       } else {
         this.panel = getPanel(type);
       }

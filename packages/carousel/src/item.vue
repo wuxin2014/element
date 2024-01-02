@@ -65,8 +65,8 @@
        * 1. 若在容器正中央，需水平偏移(980-490)/2
        * 2. 若在容器右侧，需水平偏移(980-490) + 490*(1-0.83)/2
        * 3. 若在容器左侧，需水平偏移490*(1-0.83)/2 * -1
-       * 
-       */ 
+       *
+       */
       calcCardTranslate(index, activeIndex) {
         const parentWidth = this.$parent.$el.offsetWidth;
         if (this.inStage) {

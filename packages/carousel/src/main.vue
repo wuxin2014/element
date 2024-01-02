@@ -143,10 +143,12 @@ export default {
 
   watch: {
     items(val) {
+      debugger
       if (val.length > 0) this.setActiveItem(this.initialIndex);
     },
 
     activeIndex(val, oldVal) {
+      debugger
       this.resetItemPosition(oldVal);
       if (oldVal > -1) {
         this.$emit('change', val, oldVal);
@@ -241,7 +243,7 @@ export default {
       this.pauseTimer();
       this.startTimer();
     },
-
+    // 设置激活的Item
     setActiveItem(index) {
       if (typeof index === 'string') {
         const filteredItems = this.items.filter(item => item.name === index);
@@ -255,7 +257,8 @@ export default {
         return;
       }
       let length = this.items.length;
-      const oldIndex = this.activeIndex;
+      const oldIndex = this.activeIndex; // 记录旧的activeIndex
+      // activeIndex设置新的值
       if (index < 0) {
         this.activeIndex = this.loop ? length - 1 : 0;
       } else if (index >= length) {
@@ -263,6 +266,7 @@ export default {
       } else {
         this.activeIndex = index;
       }
+      // 旧的activeIndex跟新的activeIndex相同，resetItemPosition
       if (oldIndex === this.activeIndex) {
         this.resetItemPosition(oldIndex);
       }
@@ -301,6 +305,7 @@ export default {
     debugger
     this.updateItems();
     this.$nextTick(() => {
+      debugger
       addResizeListener(this.$el, this.resetItemPosition);
       if (this.initialIndex < this.items.length && this.initialIndex >= 0) {
         this.activeIndex = this.initialIndex;
