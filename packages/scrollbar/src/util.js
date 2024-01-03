@@ -5,7 +5,7 @@ export const BAR_MAP = {
     scrollSize: 'scrollHeight',
     size: 'height',
     key: 'vertical',
-    axis: 'Y',
+    axis: 'Y', // Y轴
     client: 'clientY',
     direction: 'top'
   },
@@ -15,7 +15,7 @@ export const BAR_MAP = {
     scrollSize: 'scrollWidth',
     size: 'width',
     key: 'horizontal',
-    axis: 'X',
+    axis: 'X', // X轴
     client: 'clientX',
     direction: 'left'
   }

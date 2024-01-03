@@ -35,10 +35,10 @@ export default {
 
   computed: {
     wrap() {
-      return this.$refs.wrap; // 指哪
+      return this.$refs.wrap; // 指哪看渲染函数中元素
     }
   },
-
+  // 渲染函数
   render(h) {
     let gutter = scrollbarWidth();
     let style = this.wrapStyle;
@@ -103,7 +103,7 @@ export default {
     handleScroll() {
       const wrap = this.wrap;
 
-      this.moveY = ((wrap.scrollTop * 100) / wrap.clientHeight);
+      this.moveY = ((wrap.scrollTop * 100) / wrap.clientHeight); // 元素top滚动距离 / 元素可视区高度 这是计算什么？移动百分比
       this.moveX = ((wrap.scrollLeft * 100) / wrap.clientWidth);
     },
 
@@ -112,7 +112,7 @@ export default {
       const wrap = this.wrap;
       if (!wrap) return;
 
-      heightPercentage = (wrap.clientHeight * 100 / wrap.scrollHeight);
+      heightPercentage = (wrap.clientHeight * 100 / wrap.scrollHeight); // 元素可视区的高度 / 元素内容高(不可见区域也包含) 即占比
       widthPercentage = (wrap.clientWidth * 100 / wrap.scrollWidth);
 
       this.sizeHeight = (heightPercentage < 100) ? (heightPercentage + '%') : '';
