@@ -320,7 +320,7 @@
         cachedPlaceHolder: '',
         optionsCount: 0,
         filteredOptionsCount: 0,
-        visible: false,
+        visible: false, // select的下拉选项列表面板是否展示
         softFocus: false,
         selectedLabel: '',
         hoverIndex: -1,
@@ -421,7 +421,7 @@
             }
           }
         }
-        this.$emit('visible-change', val);
+        this.$emit('visible-change', val); // visible-change事件
       },
 
       options() {
@@ -511,7 +511,7 @@
 
       emitChange(val) {
         if (!valueEquals(this.value, val)) {
-          this.$emit('change', val);
+          this.$emit('change', val); // 触发change事件
         }
       },
 
@@ -704,8 +704,8 @@
           this.emitChange(option.value);
           this.visible = false;
         }
-        this.isSilentBlur = byClick;
-        this.setSoftFocus();
+        this.isSilentBlur = byClick; // 什么作用
+        this.setSoftFocus(); // 设置软聚焦
         if (this.visible) return;
         this.$nextTick(() => {
           this.scrollToOption(option);
@@ -861,7 +861,7 @@
       this.debouncedQueryChange = debounce(this.debounce, (e) => {
         this.handleQueryChange(e.target.value);
       });
-
+      // 注册事件
       this.$on('handleOptionClick', this.handleOptionSelect);
       this.$on('setSelected', this.setSelected);
     },

@@ -40,7 +40,6 @@ export default {
 
   methods: {
     clickThumbHandler(e) {
-      debugger
       // prevent click event of right button
       if (e.ctrlKey || e.button === 2) {
         return;
@@ -69,6 +68,7 @@ export default {
     },
 
     mouseMoveDocumentHandler(e) {
+      debugger
       if (this.cursorDown === false) return;
       const prevPage = this[this.bar.axis];
 

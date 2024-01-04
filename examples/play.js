@@ -3,7 +3,8 @@ import Element from 'main/index.js';
 import 'packages/theme-chalk/src/index.scss';
 // import App from './play/index.vue';
 // import APP from './play/pages/TooltipDemo'
-import App from './play/pages/CarouselDemo'
+// import App from './play/pages/TimePickerDemo2'
+import App from './play/pages/SelectDemo'
 
 Vue.use(Element);
 // Vue.use(Element, { size: 'small', zIndex: 3000 });

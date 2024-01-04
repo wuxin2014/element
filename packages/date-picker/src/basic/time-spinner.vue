@@ -208,17 +208,18 @@
 
       emitSelectRange(type) {
         if (type === 'hours') {
-          this.$emit('select-range', 0, 2);
+          this.$emit('select-range', 0, 2); // 选中时的两个字符
         } else if (type === 'minutes') {
-          this.$emit('select-range', 3, 5);
+          this.$emit('select-range', 3, 5); // 选中分的两个字符
         } else if (type === 'seconds') {
-          this.$emit('select-range', 6, 8);
+          this.$emit('select-range', 6, 8); // 选中秒的两个字符
         }
         this.currentScrollbar = type;
       },
 
       bindScrollEvent() {
         const bindFunction = (type) => {
+          // 监听scroll事件，wrap是什么
           this.$refs[type].wrap.onscroll = (e) => {
             // TODO: scroll is emitted when set scrollTop programatically
             // should find better solutions in the future!
@@ -245,6 +246,7 @@
       },
 
       adjustCurrentSpinner(type) {
+        debugger
         this.adjustSpinner(type, this[type]);
       },
 

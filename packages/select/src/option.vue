@@ -124,12 +124,14 @@
 
       hoverItem() {
         if (!this.disabled && !this.groupDisabled) {
+          // 给select组件实例的hoverIndex进行赋值，作用是什么
           this.select.hoverIndex = this.select.options.indexOf(this);
         }
       },
 
       selectOptionClick() {
         if (this.disabled !== true && this.groupDisabled !== true) {
+          // 往上找到组件名为'ElSelect'的组件，并触发其handleOptionClick函数
           this.dispatch('ElSelect', 'handleOptionClick', [this, true]);
         }
       },

@@ -11,6 +11,9 @@ https://blog.csdn.net/weixin_58860430/article/details/126781582
 ### 子项 使用绝对定位，position: absolute; left: 0; top: 0; height: 100%; width为父容器的50%；
 
 
+Monorepo 的全称是 monolithic repository，即单体式仓库，与之对应的是 Multirepo(multiple repository
+Monorep 是把所有相关的 package 都放在一个仓库里进行管理，每个 package 独立发布
+
 堆叠式 & 卡片式
 ```
 <script>

@@ -65,6 +65,7 @@
     mounted() {
       this.referenceElm = this.$parent.$refs.reference.$el;
       this.$parent.popperElm = this.popperElm = this.$el;
+      // 注册事件
       this.$on('updatePopper', () => {
         if (this.$parent.visible) this.updatePopper();
       });

@@ -502,7 +502,7 @@ export default {
     triggerClass() {
       return this.prefixIcon || (this.type.indexOf('time') !== -1 ? 'el-icon-time' : 'el-icon-date');
     },
-    // 这个需要看下
+
     selectionMode() {
       if (this.type === 'week') {
         return 'week';
@@ -635,7 +635,8 @@ export default {
     },
 
     formatToValue(date) {
-      const isFormattable = isDateObject(date) || (Array.isArray(date) && date.every(isDateObject));
+      const isFormattable = isDateObject(date) || (Array.isArray(date) && date.every(isDateObject)); // 是否可格式化
+      // 绑定值的格式化
       if (this.valueFormat && isFormattable) {
         return formatAsFormatAndType(date, this.valueFormat, this.type, this.rangeSeparator);
       } else {
@@ -908,7 +909,7 @@ export default {
       this.picker.$on('select-range', (start, end, pos) => {
         if (this.refInput.length === 0) return;
         if (!pos || pos === 'min') {
-          this.refInput[0].setSelectionRange(start, end);
+          this.refInput[0].setSelectionRange(start, end); // 设定<input> 或 <textarea> 元素中当前选中文本的起始和结束位置。
           this.refInput[0].focus();
         } else if (pos === 'max') {
           this.refInput[1].setSelectionRange(start, end);

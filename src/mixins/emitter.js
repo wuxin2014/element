@@ -1,3 +1,4 @@
+// 调用子组件的方法
 function broadcast(componentName, eventName, params) {
   this.$children.forEach(child => {
     var name = child.$options.componentName;
@@ -11,6 +12,7 @@ function broadcast(componentName, eventName, params) {
 }
 export default {
   methods: {
+    // 往父级一层一层找，找到组件名相同的组件，再调用其$emit函数
     dispatch(componentName, eventName, params) {
       var parent = this.$parent || this.$root;
       var name = parent.$options.componentName;
@@ -26,6 +28,7 @@ export default {
         parent.$emit.apply(parent, [eventName].concat(params));
       }
     },
+    // 往子级一层一层找，找到组件名相同的组件，再调用其$emit函数
     broadcast(componentName, eventName, params) {
       broadcast.call(this, componentName, eventName, params);
     }
