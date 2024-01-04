@@ -572,6 +572,7 @@
 
       handleFocus(event) {
         if (!this.softFocus) {
+          // 聚焦情况下如果有filterable为true的情况下，会自动弹出下拉框
           if (this.automaticDropdown || this.filterable) {
             if (this.filterable && !this.visible) {
               this.menuVisibleOnFocus = true;
