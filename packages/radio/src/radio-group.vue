@@ -31,7 +31,7 @@
     mixins: [Emitter],
 
     props: {
-      value: {},
+      value: {}, // value并未定义类型，指向v-model绑定的值
       size: String,
       fill: String,
       textColor: String,
@@ -53,6 +53,7 @@
     },
 
     created() {
+      // 注册事件
       this.$on('handleChange', value => {
         this.$emit('change', value);
       });
@@ -60,6 +61,7 @@
     mounted() {
       // 当radioGroup没有默认选项时，第一个可以选中Tab导航
       const radios = this.$el.querySelectorAll('[type=radio]');
+      // firstLabel
       const firstLabel = this.$el.querySelectorAll('[role=radio]')[0];
       if (![].some.call(radios, radio => radio.checked) && firstLabel) {
         firstLabel.tabIndex = 0;

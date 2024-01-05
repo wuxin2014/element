@@ -83,7 +83,6 @@
     computed: {
       model: {
         get() {
-          // 若是isGroup,返回就是数组
           return this.isGroup
             ? this.store : this.value !== undefined
               ? this.value : this.selfModel;
@@ -164,7 +163,7 @@
     },
 
     props: {
-      value: {}, // 未指定类型，不是误解为对象
+      value: {}, // 未指定类型，不是误解为对象 => v-model绑定的值
       label: {}, // 未指定类型，不是误解为对象
       indeterminate: Boolean,
       disabled: Boolean,
@@ -209,7 +208,8 @@
     created() {
       this.checked && this.addToStore();
     },
-    mounted() { // 为indeterminate元素 添加aria-controls 属性
+    mounted() {
+      // 为indeterminate元素 添加aria-controls 属性
       if (this.indeterminate) {
         this.$el.setAttribute('aria-controls', this.controls);
       }

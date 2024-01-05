@@ -64,8 +64,8 @@
     componentName: 'ElRadio',
 
     props: {
-      value: {},
-      label: {},
+      value: {}, // value 类型没有定义 => v-model 绑定的值
+      label: {}, // label 类型没有定义 => 指向radio标签属性value的值
       disabled: Boolean,
       name: String,
       border: Boolean,
@@ -98,8 +98,9 @@
           if (this.isGroup) {
             this.dispatch('ElRadioGroup', 'input', [val]);
           } else {
-            this.$emit('input', val);
+            this.$emit('input', val); // input事件回调 => v-model绑定的值会更改
           }
+          // 真实radio标签的checked属性变更
           this.$refs.radio && (this.$refs.radio.checked = this.model === this.label);
         }
       },
@@ -125,7 +126,7 @@
     methods: {
       handleChange() {
         this.$nextTick(() => {
-          this.$emit('change', this.model);
+          this.$emit('change', this.model); // 如果想在change后做些操作，可以在组件上绑定自定义change事件
           this.isGroup && this.dispatch('ElRadioGroup', 'handleChange', this.model);
         });
       }
