@@ -150,9 +150,10 @@ export default {
 
   methods: {
     handleStart(rawFile) {
-      rawFile.uid = Date.now() + this.tempIndex++;
+      rawFile.uid = Date.now() + this.tempIndex++; // 给rawFile对象添加uid属性
+      // 组装新的file对象，带有状态等属性
       let file = {
-        status: 'ready',
+        status: 'ready', // 状态一开始是ready
         name: rawFile.name,
         size: rawFile.size,
         percentage: 0,
@@ -162,15 +163,15 @@ export default {
 
       if (this.listType === 'picture-card' || this.listType === 'picture') {
         try {
-          file.url = URL.createObjectURL(rawFile);
+          file.url = URL.createObjectURL(rawFile); // 根据文件对象创建url
         } catch (err) {
           console.error('[Element Error][Upload]', err);
           return;
         }
       }
 
-      this.uploadFiles.push(file);
-      this.onChange(file, this.uploadFiles);
+      this.uploadFiles.push(file); // 将file追加到uploadFiles数组中，用于展示
+      this.onChange(file, this.uploadFiles); // onChange回调函数
     },
     handleProgress(ev, rawFile) {
       const file = this.getFile(rawFile);
@@ -186,7 +187,7 @@ export default {
         file.response = res;
 
         this.onSuccess(res, file, this.uploadFiles);
-        this.onChange(file, this.uploadFiles);
+        this.onChange(file, this.uploadFiles); // onChange回调函数
       }
     },
     handleError(err, rawFile) {
@@ -198,14 +199,15 @@ export default {
       fileList.splice(fileList.indexOf(file), 1);
 
       this.onError(err, file, this.uploadFiles);
-      this.onChange(file, this.uploadFiles);
+      this.onChange(file, this.uploadFiles); // onChange回调函数
     },
+    // 删除操作
     handleRemove(file, raw) {
       if (raw) {
         file = this.getFile(raw);
       }
       let doRemove = () => {
-        this.abort(file);
+        this.abort(file); // 取消请求
         let fileList = this.uploadFiles;
         fileList.splice(fileList.indexOf(file), 1);
         this.onRemove(file, fileList);

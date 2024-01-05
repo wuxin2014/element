@@ -60,29 +60,31 @@ export default {
       return str.indexOf('image') !== -1;
     },
     handleChange(ev) {
+      // 文件选择后执行的change函数
       const files = ev.target.files;
 
       if (!files) return;
       this.uploadFiles(files);
     },
     uploadFiles(files) {
+      // 判断是否超出文件上传限制数
       if (this.limit && this.fileList.length + files.length > this.limit) {
         this.onExceed && this.onExceed(files, this.fileList);
         return;
       }
-
+      // 处理要上传的文件，类数组转换成数组
       let postFiles = Array.prototype.slice.call(files);
       if (!this.multiple) { postFiles = postFiles.slice(0, 1); }
 
       if (postFiles.length === 0) { return; }
-
+      // 循环处理上传逻辑
       postFiles.forEach(rawFile => {
         this.onStart(rawFile);
         if (this.autoUpload) this.upload(rawFile);
       });
     },
     upload(rawFile) {
-      this.$refs.input.value = null;
+      this.$refs.input.value = null; // 清空文件类型input的value值
 
       if (!this.beforeUpload) {
         return this.post(rawFile);
@@ -95,6 +97,7 @@ export default {
 
           if (fileType === '[object File]' || fileType === '[object Blob]') {
             if (fileType === '[object Blob]') {
+              // 将blob转换成file
               processedFile = new File([processedFile], rawFile.name, {
                 type: rawFile.type
               });
@@ -153,14 +156,16 @@ export default {
           delete this.reqs[uid];
         }
       };
+      // 创建http请求
       const req = this.httpRequest(options);
-      this.reqs[uid] = req;
+      this.reqs[uid] = req; // 存储req的作用是啥(可以终止请求)
       if (req && req.then) {
         req.then(options.onSuccess, options.onError);
       }
     },
     handleClick() {
       if (!this.disabled) {
+        // 先清空type为file的input的value值，模拟点击
         this.$refs.input.value = null;
         this.$refs.input.click();
       }

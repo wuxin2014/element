@@ -38,11 +38,12 @@
         const accept = this.uploader.accept;
         this.dragover = false;
         if (!accept) {
-          this.$emit('file', e.dataTransfer.files);
+          this.$emit('file', e.dataTransfer.files); // 事件回调
           return;
         }
         this.$emit('file', [].slice.call(e.dataTransfer.files).filter(file => {
           const { type, name } = file;
+          // 获取扩展后缀名
           const extension = name.indexOf('.') > -1
             ? `.${ name.split('.').pop() }`
             : '';

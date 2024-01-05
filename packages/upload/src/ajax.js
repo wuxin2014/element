@@ -36,6 +36,7 @@ export default function upload(option) {
   const xhr = new XMLHttpRequest();
   const action = option.action;
 
+  // 上传进度处理
   if (xhr.upload) {
     xhr.upload.onprogress = function progress(e) {
       if (e.total > 0) {
@@ -44,7 +45,7 @@ export default function upload(option) {
       option.onProgress(e);
     };
   }
-
+  // 构建FormData对象，追加表单项
   const formData = new FormData();
 
   if (option.data) {
@@ -54,11 +55,11 @@ export default function upload(option) {
   }
 
   formData.append(option.filename, option.file, option.file.name);
-
+  // 失败监听
   xhr.onerror = function error(e) {
     option.onError(e);
   };
-
+  // 成功监听
   xhr.onload = function onload() {
     if (xhr.status < 200 || xhr.status >= 300) {
       return option.onError(getError(action, option, xhr));
