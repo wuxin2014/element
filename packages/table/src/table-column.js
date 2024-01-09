@@ -17,7 +17,7 @@ export default {
     labelClassName: String,
     property: String,
     prop: String,
-    width: {},
+    width: {}, // 类型未定义，不要误解成对象
     minWidth: {},
     renderHeader: Function,
     sortable: {
@@ -68,6 +68,7 @@ export default {
 
   computed: {
     owner() {
+      // TODO 待细看
       let parent = this.$parent;
       while (parent && !parent.tableId) {
         parent = parent.$parent;
@@ -76,6 +77,7 @@ export default {
     },
 
     columnOrTableParent() {
+      // TODO 待细看
       let parent = this.$parent;
       while (parent && !parent.tableId && !parent.columnId) {
         parent = parent.$parent;
@@ -132,7 +134,7 @@ export default {
 
     setColumnForcedProps(column) {
       // 对于特定类型的 column，某些属性不允许设置
-      const type = column.type;
+      const type = column.type; // column.type => index/selection/expand
       const source = cellForced[type] || {};
       Object.keys(source).forEach(prop => {
         let value = source[prop];
@@ -298,11 +300,12 @@ export default {
   },
 
   mounted() {
+    debugger
     const owner = this.owner;
     const parent = this.columnOrTableParent;
     const children = this.isSubColumn ? parent.$el.children : parent.$refs.hiddenColumns.children;
     const columnIndex = this.getColumnElIndex(children, this.$el);
-
+    // 更新store中state._columns的值
     owner.store.commit('insertColumn', this.columnConfig, columnIndex, this.isSubColumn ? parent.columnConfig : null);
   },
 

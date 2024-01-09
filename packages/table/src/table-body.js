@@ -87,6 +87,7 @@ export default {
     // update DOM manually. see https://github.com/ElemeFE/element/pull/13954/files#diff-9b450c00d0a9dec0ffad5a3176972e40
     'store.states.hoverRow'(newVal, oldVal) {
       if (!this.store.states.isComplex || this.$isServer) return;
+      // requestAnimationFrame的兼容处理
       let raf = window.requestAnimationFrame;
       if (!raf) {
         raf = (fn) => setTimeout(fn, 16);
@@ -119,12 +120,14 @@ export default {
     getKeyOfRow(row, index) {
       const rowKey = this.table.rowKey;
       if (rowKey) {
+        // 通过属性rowKey获取行唯一标识，rowKey可以是字符串或函数
         return getRowIdentity(row, rowKey);
       }
       return index;
     },
 
     isColumnHidden(index) {
+      // TODO 待细看
       if (this.fixed === true || this.fixed === 'left') {
         return index >= this.leftFixedLeafCount;
       } else if (this.fixed === 'right') {
@@ -145,6 +148,7 @@ export default {
           rowIndex,
           columnIndex
         });
+        // spanMethod函数执行后结果处理
         if (Array.isArray(result)) {
           rowspan = result[0];
           colspan = result[1];
@@ -157,6 +161,7 @@ export default {
     },
 
     getRowStyle(row, rowIndex) {
+      // rowStyle是函数或对象
       const rowStyle = this.table.rowStyle;
       if (typeof rowStyle === 'function') {
         return rowStyle.call(null, {
@@ -216,13 +221,13 @@ export default {
     },
 
     getCellClass(rowIndex, columnIndex, row, column) {
-      const classes = [column.id, column.align, column.className];
+      const classes = [column.id, column.align, column.className]; // column.className 单独定制
 
       if (this.isColumnHidden(columnIndex)) {
         classes.push('is-hidden');
       }
 
-      const cellClassName = this.table.cellClassName;
+      const cellClassName = this.table.cellClassName; // 通用cell样式
       if (typeof cellClassName === 'string') {
         classes.push(cellClassName);
       } else if (typeof cellClassName === 'function') {
@@ -376,6 +381,7 @@ export default {
     },
 
     wrappedRowRender(row, $index) {
+      // TODO 待细看
       const store = this.store;
       const { isRowExpanded, assertRowKey } = store;
       const { treeData, lazyTreeNodeMap, childrenColumnName, rowKey } = store.states;

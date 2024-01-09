@@ -28,6 +28,7 @@ Watcher.prototype.mutations = {
   },
 
   insertColumn(states, column, index, parent) {
+    debugger
     let array = states._columns;
     if (parent) {
       array = parent.children;
@@ -102,6 +103,7 @@ Watcher.prototype.mutations = {
 
   filterChange(states, options) {
     let { column, values, silent } = options;
+    // filterChange触发
     const newFilters = this.updateFilters(column, values);
 
     this.execQuery();

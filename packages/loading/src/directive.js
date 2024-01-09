@@ -93,7 +93,7 @@ loadingDirective.install = Vue => {
       const spinnerExr = el.getAttribute('element-loading-spinner');
       const backgroundExr = el.getAttribute('element-loading-background');
       const customClassExr = el.getAttribute('element-loading-custom-class');
-      const vm = vnode.context;
+      const vm = vnode.context; // 从vnode获取实例对象
       const mask = new Mask({
         el: document.createElement('div'),
         data: {

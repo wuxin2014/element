@@ -17,7 +17,7 @@ const doFlattenColumns = (columns) => {
   const result = [];
   columns.forEach((column) => {
     if (column.children) {
-      result.push.apply(result, doFlattenColumns(column.children));
+      result.push.apply(result, doFlattenColumns(column.children)); // 这一步注意,变成多维数组
     } else {
       result.push(column);
     }
@@ -72,7 +72,7 @@ export default Vue.extend({
     };
   },
 
-  mixins: [expand, current, tree],
+  mixins: [expand, current, tree], // 混入
 
   methods: {
     // 检查 rowKey 是否存在
@@ -85,8 +85,8 @@ export default Vue.extend({
     updateColumns() {
       const states = this.states;
       const _columns = states._columns || [];
-      states.fixedColumns = _columns.filter((column) => column.fixed === true || column.fixed === 'left');
-      states.rightFixedColumns = _columns.filter((column) => column.fixed === 'right');
+      states.fixedColumns = _columns.filter((column) => column.fixed === true || column.fixed === 'left'); // 左边固定列
+      states.rightFixedColumns = _columns.filter((column) => column.fixed === 'right'); // 右边固定列
 
       if (states.fixedColumns.length > 0 && _columns[0] && _columns[0].type === 'selection' && !_columns[0].fixed) {
         _columns[0].fixed = true;
@@ -95,7 +95,7 @@ export default Vue.extend({
 
       const notFixedColumns = _columns.filter(column => !column.fixed);
       states.originColumns = [].concat(states.fixedColumns).concat(notFixedColumns).concat(states.rightFixedColumns);
-
+      // 叶子列
       const leafColumns = doFlattenColumns(notFixedColumns);
       const fixedLeafColumns = doFlattenColumns(states.fixedColumns);
       const rightFixedLeafColumns = doFlattenColumns(states.rightFixedColumns);
@@ -154,7 +154,7 @@ export default Vue.extend({
         this.table.$emit('selection-change', newSelection.slice());
       }
     },
-
+    // 点击行选择
     toggleRowSelection(row, selected, emitChange = true) {
       const changed = toggleRowStatus(this.states.selection, row, selected);
       if (changed) {
@@ -166,7 +166,7 @@ export default Vue.extend({
         this.table.$emit('selection-change', newSelection);
       }
     },
-
+    // 点击全选
     _toggleAllSelection() {
       const states = this.states;
       const { data = [], selection } = states;
@@ -179,6 +179,7 @@ export default Vue.extend({
 
       let selectionChanged = false;
       data.forEach((row, index) => {
+        // 排除不可选择的，注意selectable为函数，传入了row,index做为参数, 我理解的是true可选
         if (states.selectable) {
           if (states.selectable.call(null, row, index) && toggleRowStatus(selection, row, value)) {
             selectionChanged = true;
@@ -277,10 +278,11 @@ export default Vue.extend({
       const states = this.states;
       const { _data, filters } = states;
       let data = _data;
-
+      // states.filters 是啥待看
       Object.keys(filters).forEach((columnId) => {
         const values = states.filters[columnId];
         if (!values || values.length === 0) return;
+        // column.filterMethod过滤
         const column = getColumnById(this.states, columnId);
         if (column && column.filterMethod) {
           data = data.filter((row) => {
@@ -297,7 +299,7 @@ export default Vue.extend({
       states.data = sortData(states.filteredData, states);
     },
 
-    // 根据 filters 与 sort 去过滤 data
+    // 根据 filters 与 sort 去过滤 data，待细看
     execQuery(ignore) {
       if (!(ignore && ignore.filter)) {
         this.execFilter();

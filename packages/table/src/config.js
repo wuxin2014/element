@@ -25,7 +25,7 @@ export const cellStarts = {
   }
 };
 
-// 这些选项不应该被覆盖
+// selection/index/expand 这些选项不应该被覆盖
 export const cellForced = {
   selection: {
     renderHeader: function(h, { store }) {

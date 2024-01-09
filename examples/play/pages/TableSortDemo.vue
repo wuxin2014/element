@@ -23,7 +23,7 @@
           <el-table-column
             prop="contract"
             label="合约代码"
-            sortable
+            sortable="custom"
             align="center">
           </el-table-column>
           <el-table-column
@@ -84,7 +84,33 @@
         },
       },
       methods: {
-        sortChange() {},
+        sortChange(column) {
+          this.currentPage = 1
+          this.tableList = this.tableList.sort(this.sortFun(column.prop, column.order === 'ascending'));
+          this.order = {
+            order: column.order,
+            prop: column.prop
+          }
+        },
+        sortFun(attr, rev) {
+          console.log(attr, rev)
+          if (rev == undefined) {
+            rev = 1;
+          } else {
+            rev = (rev) ? 1 : -1;
+          }
+          return function (a, b) {
+            a = a[attr];
+            b = b[attr];
+            if (a < b) {
+              return rev * -1;
+            }
+            if (a > b) {
+              return rev * 1;
+            }
+            return 0;
+          }
+        },
         handleAdd() {
           ++uuid;
           this.tableList.push({

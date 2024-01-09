@@ -10,7 +10,7 @@ export function createStore(table, initialState = {}) {
   store.table = table;
   // fix https://github.com/ElemeFE/element/issues/14075
   // related pr https://github.com/ElemeFE/element/pull/14146
-  store.toggleAllSelection = debounce(10, store._toggleAllSelection);
+  store.toggleAllSelection = debounce(10, store._toggleAllSelection); // type:selection属性的全选触发防抖处理
   Object.keys(initialState).forEach(key => {
     store.states[key] = initialState[key];
   });

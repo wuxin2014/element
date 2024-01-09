@@ -81,6 +81,7 @@
         }">
       </table-footer>
     </div>
+    <!-- 左边filxed -->
     <div
       v-if="fixedColumns.length > 0"
       v-mousewheel="handleFixedMousewheel"
@@ -142,6 +143,7 @@
           }"></table-footer>
       </div>
     </div>
+    <!-- 右边fixed -->
     <div
       v-if="rightFixedColumns.length > 0"
       v-mousewheel="handleFixedMousewheel"
@@ -436,7 +438,7 @@
           this.scrollPosition = 'middle';
         }
       },
-
+      // 节流函数
       throttleSyncPostion: throttle(16, function() {
         this.syncPostion();
       }),
@@ -647,12 +649,12 @@
     },
 
     created() {
-      this.tableId = 'el-table_' + tableIdSeed++;
+      this.tableId = 'el-table_' + tableIdSeed++; // 添加tableId属性
       this.debouncedUpdateLayout = debounce(50, () => this.doLayout());
     },
 
     mounted() {
-      this.bindEvents();
+      this.bindEvents(); // 绑定各类事件
       this.store.updateColumns();
       this.doLayout();
 
@@ -681,6 +683,7 @@
 
     data() {
       const { hasChildren = 'hasChildren', children = 'children' } = this.treeProps;
+      // 创建了store
       this.store = createStore(this, {
         rowKey: this.rowKey,
         defaultExpandAll: this.defaultExpandAll,
@@ -691,6 +694,7 @@
         lazyColumnIdentifier: hasChildren,
         childrenColumnName: children
       });
+      // TableLayout待细看
       const layout = new TableLayout({
         store: this.store,
         table: this,

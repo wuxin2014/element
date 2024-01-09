@@ -130,6 +130,7 @@ class TableLayout {
   }
 
   updateColumnsWidth() {
+    // 细节待看
     if (Vue.prototype.$isServer) return;
     const fit = this.fit;
     const bodyWidth = this.table.$el.clientWidth;
