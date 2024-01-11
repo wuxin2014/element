@@ -28,6 +28,7 @@
 // Supported: Node, AMD, Browser globals
 //
 ;(function (root, factory) {
+    debugger
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(factory);
@@ -420,6 +421,7 @@
 
         // depending by the popper placement we have to compute its offsets slightly differently
         if (['right', 'left'].indexOf(placement) !== -1) {
+            // (referenceOffsets.top + referenceOffsets.height / 2) 指参考元素高的中心位置点
             popperOffsets.top = referenceOffsets.top + referenceOffsets.height / 2 - popperRect.height / 2;
             if (placement === 'left') {
                 popperOffsets.left = referenceOffsets.left - popperRect.width;
@@ -1042,6 +1044,7 @@
     function getOffsetParent(element) {
         // NOTE: 1 DOM access here // document.documentElement => html
         var offsetParent = element.offsetParent; // 找有定位的父级
+        // 注意root指向window, iframe中的话指向iframe的window(例主应用是wujie, 子应用中使用ElementUI,此处root指向iframe的window)
         return offsetParent === root.document.body || !offsetParent ? root.document.documentElement : offsetParent;
     }
 
@@ -1191,6 +1194,8 @@
      * @param {HTMLElement} element
      * @param {HTMLElement} parent
      * @return {Object} rect
+     * element元素相对parent元素，偏移距离的对象值
+     * 注意获取element.getBoundingClientRect()相对视窗的值，left, top, bottom, right, width, height
      */
     function getOffsetRectRelativeToCustomParent(element, parent, fixed) {
         var elementRect = getBoundingClientRect(element);

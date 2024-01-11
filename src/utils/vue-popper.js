@@ -99,7 +99,7 @@ export default {
       }
 
       if (!popper || !reference) return;
-      // 在父级元素popper里追加剪头子元素
+      // 在父级元素popper里追加箭头子元素
       if (this.visibleArrow) this.appendArrow(popper);
       // 处理popperElm是否要追加到body上
       if (this.appendToBody) document.body.appendChild(this.popperElm);
