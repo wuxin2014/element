@@ -19,6 +19,22 @@
                 </el-select>
             </el-form-item>
         </el-form>
+        <div style="padding: 20px">
+            <el-select
+            v-model="form.value"
+            filterable
+            value-key="code"
+            placeholder="请选择文章标签"
+            ref="select"
+        >
+            <el-option
+                v-for="item in options"
+                :key="item.code"
+                :label="item.label"
+                :value="item">
+            </el-option>
+        </el-select>
+        </div>
         <div v-if="form.value && form.value.code" style="padding: 10px; height: 1900px;">
             <el-button @click="() => {}">测试Button</el-button>
         </div>
@@ -59,4 +75,9 @@
 </script>
 
 <style>
+body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
 </style>
