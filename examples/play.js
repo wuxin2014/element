@@ -6,7 +6,8 @@ import 'packages/theme-chalk/src/index.scss';
 // import App from './play/pages/TimePickerDemo2'
 // import App from './play/pages/SelectDemo'
 // import App from './play/pages/DialogDemo1'
-import App from './play/pages/TableSortDemo'
+// import App from './play/pages/SelectDemo'
+import App from './play/pages/CascaderDemo1'
 
 Vue.use(Element);
 // Vue.use(Element, { size: 'small', zIndex: 3000 });

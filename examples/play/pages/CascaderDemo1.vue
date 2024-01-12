@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-cascader v-model="value" :props="props" :options="options" @change="handleChange" :appendToBody="false" popperClass="dd"></el-cascader>
+        <el-cascader v-model="value" :props="props" :options="options" @change="handleChange" :appendToBody="false" popperClass="dd" :offset="0"></el-cascader>
         <!-- <el-cascader :options="options">
             <template slot-scope="{ node, data }">
                 <span>{{ data.label }}</span>
@@ -223,4 +223,10 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+</style>
