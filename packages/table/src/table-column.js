@@ -68,7 +68,6 @@ export default {
 
   computed: {
     owner() {
-      // TODO 待细看
       let parent = this.$parent;
       while (parent && !parent.tableId) {
         parent = parent.$parent;
@@ -77,7 +76,6 @@ export default {
     },
 
     columnOrTableParent() {
-      // TODO 待细看
       let parent = this.$parent;
       while (parent && !parent.tableId && !parent.columnId) {
         parent = parent.$parent;
@@ -260,6 +258,7 @@ export default {
 
     const type = this.type || 'default';
     const sortable = this.sortable === '' ? true : this.sortable;
+    // 组装属性对象
     const defaults = {
       ...cellStarts[type],
       id: this.columnId,
@@ -277,7 +276,7 @@ export default {
       // sort 相关属性
       sortable: sortable,
       // index 列
-      index: this.index
+      index: this.index // 在属性type设置为index类型， index属性用来自定义索引值
     };
 
     const basicProps = ['columnKey', 'label', 'className', 'labelClassName', 'type', 'renderHeader', 'formatter', 'fixed', 'resizable'];

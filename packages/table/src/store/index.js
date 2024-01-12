@@ -36,7 +36,7 @@ Watcher.prototype.mutations = {
     }
 
     if (typeof index !== 'undefined') {
-      array.splice(index, 0, column);
+      array.splice(index, 0, column); // 添加column项
     } else {
       array.push(column);
     }

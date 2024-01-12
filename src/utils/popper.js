@@ -520,9 +520,11 @@
 
             // Thanks the fucking native API, `document.body.scrollTop` & `document.documentElement.scrollTop`
             var getScrollTopValue = function (element) {
+                // 获取元素的scrollTop
                 return element == document.body ? Math.max(document.documentElement.scrollTop, document.body.scrollTop) : element.scrollTop;
             }
             var getScrollLeftValue = function (element) {
+                // 获取元素的scrollLeft
                 return element == document.body ? Math.max(document.documentElement.scrollLeft, document.body.scrollLeft) : element.scrollLeft;
             }
 

@@ -655,7 +655,7 @@
 
     mounted() {
       this.bindEvents(); // 绑定各类事件
-      this.store.updateColumns();
+      this.store.updateColumns(); // 更新列
       this.doLayout();
 
       this.resizeState = {
@@ -674,7 +674,7 @@
         }
       });
 
-      this.$ready = true;
+      this.$ready = true; // el-table组件 mounted后$ready才设置成true
     },
 
     destroyed() {

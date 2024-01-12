@@ -66,11 +66,11 @@ const convertToRows = (originColumns) => {
 export default {
   name: 'ElTableHeader',
 
-  mixins: [LayoutObserver],
+  mixins: [LayoutObserver], // 注意看LayoutObserver 中mounted函数
 
   render(h) {
     const originColumns = this.store.states.originColumns;
-    const columnRows = convertToRows(originColumns, this.columns);
+    const columnRows = convertToRows(originColumns, this.columns); // this.column 从哪里取来的， store的states中
     // 是否拥有多级表头
     const isGroup = columnRows.length > 1;
     if (isGroup) this.$parent.isGroup = true;
