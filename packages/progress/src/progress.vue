@@ -111,11 +111,11 @@
         return style;
       },
       relativeStrokeWidth() {
-        return (this.strokeWidth / this.width * 100).toFixed(1);
+        return (this.strokeWidth / this.width * 100).toFixed(1); // 这在计算啥
       },
       radius() {
         if (this.type === 'circle' || this.type === 'dashboard') {
-          return parseInt(50 - parseFloat(this.relativeStrokeWidth) / 2, 10);
+          return parseInt(50 - parseFloat(this.relativeStrokeWidth) / 2, 10); // 50怎么定义下来的
         } else {
           return 0;
         }
@@ -131,22 +131,24 @@
           `;
       },
       perimeter() {
-        return 2 * Math.PI * this.radius;
+        return 2 * Math.PI * this.radius; // 圆周长
       },
       rate() {
-        return this.type === 'dashboard' ? 0.75 : 1;
+        return this.type === 'dashboard' ? 0.75 : 1; // 0.75怎么得来的
       },
       strokeDashoffset() {
         const offset = -1 * this.perimeter * (1 - this.rate) / 2;
         return `${offset}px`;
       },
       trailPathStyle() {
+        // 注意strokeDasharray、strokeDashoffset样式
         return {
           strokeDasharray: `${(this.perimeter * this.rate)}px, ${this.perimeter}px`,
           strokeDashoffset: this.strokeDashoffset
         };
       },
       circlePathStyle() {
+        // 虚线长度等于当前圆的周长
         return {
           strokeDasharray: `${this.perimeter * this.rate * (this.percentage / 100) }px, ${this.perimeter}px`,
           strokeDashoffset: this.strokeDashoffset,

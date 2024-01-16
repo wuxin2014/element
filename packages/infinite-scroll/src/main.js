@@ -65,7 +65,7 @@ const getScrollOptions = (el, vm) => {
   if (!isHtmlElement(el)) return {};
 
   return entries(attributes).reduce((map, [key, option]) => {
-    const { type, default: defaultValue } = option;
+    const { type, default: defaultValue } = option; // 获取type 跟 default
     let value = el.getAttribute(`infinite-scroll-${key}`);
     value = isUndefined(vm[value]) ? value : vm[value];
     switch (type) {
@@ -117,6 +117,7 @@ const handleScroll = function(cb) {
 
 };
 
+// 指令
 export default {
   name: 'InfiniteScroll',
   inserted(el, binding, vnode) {
@@ -124,9 +125,9 @@ export default {
 
     const vm = vnode.context;
     // only include vertical scroll
-    const container = getScrollContainer(el, true);
+    const container = getScrollContainer(el, true); // 获取滚动容器
     const { delay, immediate } = getScrollOptions(el, vm);
-    const onScroll = throttle(delay, handleScroll.bind(el, cb));
+    const onScroll = throttle(delay, handleScroll.bind(el, cb)); // 节流定义滚动函数
 
     el[scope] = { el, vm, container, onScroll };
 
