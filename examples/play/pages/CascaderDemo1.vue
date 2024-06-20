@@ -1,12 +1,71 @@
 <template>
-    <div>
-        <el-cascader v-model="value" :props="props" :options="options" @change="handleChange" :appendToBody="false" popperClass="dd" :offset="0"></el-cascader>
-        <!-- <el-cascader :options="options">
-            <template slot-scope="{ node, data }">
-                <span>{{ data.label }}</span>
-                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-            </template>
-        </el-cascader> -->
+    <div style="padding: 20px">
+        <el-form :model="searchForm" label-width="100px">
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="申请时间">
+                        <el-date-picker
+                            v-model="searchForm.effect_date"
+                            type="daterange"
+                            range-separator="~"
+                            start-placeholder="开始曰期"
+                            end-placeholder="结束日期"
+                            format="yyyyMMdd"
+                            value-format="yyyyMMdd"
+                            :pickerOptions="startPickerOptions"
+                            :append-to-body="true"
+                            :offset="-100"
+                            style="width: 100%">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="过期时间">
+                        <el-date-picker
+                            v-model="searchForm.expire_date"
+                            type="daterange"
+                            range-separator="~"
+                            start-placeholder="开始曰期"
+                            end-placeholder="结束日期"
+                            format="yyyyMMdd"
+                            value-format="yyyyMMdd"
+                            :pickerOptions="endPickerOptions"
+                            :append-to-body="true"
+                            :offset="0"
+                            style="width: 100%">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="级联选项">
+                        <el-cascader
+                            v-model="searchForm.value"
+                            :props="props"
+                            :options="options"
+                            :append-to-body="true"
+                            :offset="-400"
+                            style="width: 100%"
+                            @change="handleChange">
+                        </el-cascader>
+                        <!-- <el-cascader
+                            v-model="searchForm.value"
+                            :props="props"
+                            :options="options"
+                            :append-to-body="false"
+                            popper-class="custom-popper-class"
+                            style="width: 100%"
+                            @change="handleChange">
+                        </el-cascader> -->
+                        <!-- <el-cascader :options="options">
+                            <template slot-scope="{ node, data }">
+                                <span>{{ data.label }}</span>
+                                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                            </template>
+                        </el-cascader> -->
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
     </div>
 </template>
 
@@ -15,9 +74,24 @@ export default {
     data() {
         return {
             props: {
-                multiple: true
+                // multiple: true
+                multiple: false
             },
-            value: [["zhinan", "shejiyuanze", "yizhi"], ["zhinan", "shejiyuanze", "fankui"]],
+            searchForm: {
+                value: [], // [["zhinan", "shejiyuanze", "yizhi"], ["zhinan", "shejiyuanze", "fankui"]],
+                effect_date: [],
+                expire_date: []
+            },
+            startPickerOptions: {
+                disabledDate(time) {
+                    // return that.$moment(time).format('YYYYMMDD') < that.$moment().subtract(1, 'years').format('YYYYMMDD')
+                }
+            },
+            endPickerOptions: {
+                disabledDate(time) {
+                    // return that.$moment(time).format('YYYYMMDD') > that.$moment().add(1, 'years').format('YYYYMMDD')
+                }
+            },
             options: [{
                 value: 'zhinan',
                 label: '指南',
@@ -223,10 +297,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 body {
     position: relative;
     margin: 0;
     padding: 0;
+}
+.custom_poper_class {
+  position: absolute !important;
+  left: 0 !important;
 }
 </style>
