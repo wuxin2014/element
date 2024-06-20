@@ -134,6 +134,7 @@ export default {
                 //     { required: true, validator: validateDesc, trigger: 'blur' },
                 //     { required: true, validator: validateDesc2, trigger: 'blur' }
                 // ],
+                // type : string,number,boolean,method,regexp,integer,float,array,object,enum,date,url,hex,email,any
                 date1: [
                     { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
                 ],
