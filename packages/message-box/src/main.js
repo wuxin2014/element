@@ -82,10 +82,12 @@ const showNextMsg = () => {
   instance.action = '';
 
   if (!instance.visible || instance.closeTimer) {
+    // 消息队列长度大于0
     if (msgQueue.length > 0) {
-      currentMsg = msgQueue.shift();
+      currentMsg = msgQueue.shift(); // 取出队列中的第一个
 
       let options = currentMsg.options;
+      // 给instance实例设置属性
       for (let prop in options) {
         if (options.hasOwnProperty(prop)) {
           instance[prop] = options[prop];
@@ -95,7 +97,8 @@ const showNextMsg = () => {
         instance.callback = defaultCallback;
       }
 
-      let oldCb = instance.callback;
+      let oldCb = instance.callback; // 保留原有的callback函数
+      // 重新定义instance的callback函数
       instance.callback = (action, instance) => {
         oldCb(action, instance);
         showNextMsg();
