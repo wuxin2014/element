@@ -34,7 +34,7 @@ const Message = function(options) {
   }
   // 手动挂载
   instance.$mount();
-  // 追加到document.body里
+  // 追加元素到document.body里
   document.body.appendChild(instance.$el);
   // 每个message的偏移量
   let verticalOffset = options.offset || 20;
@@ -42,7 +42,7 @@ const Message = function(options) {
     verticalOffset += item.$el.offsetHeight + 16;
   });
   instance.verticalOffset = verticalOffset;
-  instance.visible = true;
+  instance.visible = true; // 设置可见
   instance.$el.style.zIndex = PopupManager.nextZIndex();
   instances.push(instance); // push instance
   return instance;

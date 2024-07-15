@@ -12,6 +12,7 @@ loadingDirective.install = Vue => {
     if (binding.value) {
       Vue.nextTick(() => {
         if (binding.modifiers.fullscreen) {
+          // 带有修饰符全屏属性
           el.originalPosition = getStyle(document.body, 'position');
           el.originalOverflow = getStyle(document.body, 'overflow');
           el.maskStyle.zIndex = PopupManager.nextZIndex();
@@ -72,7 +73,7 @@ loadingDirective.install = Vue => {
       }
       el.domVisible = true;
 
-      parent.appendChild(el.mask);
+      parent.appendChild(el.mask); // 在父元素中追加loading dom元素
       Vue.nextTick(() => {
         if (el.instance.hiding) {
           el.instance.$emit('after-leave');
@@ -82,7 +83,7 @@ loadingDirective.install = Vue => {
       });
       el.domInserted = true;
     } else if (el.domVisible && el.instance.hiding === true) {
-      el.instance.visible = true;
+      el.instance.visible = true; // 设置组件的visible => 类似组件中this.visible = true
       el.instance.hiding = false;
     }
   };
@@ -95,7 +96,7 @@ loadingDirective.install = Vue => {
       const customClassExr = el.getAttribute('element-loading-custom-class');
       const vm = vnode.context; // 从vnode获取实例对象
       const mask = new Mask({
-        el: document.createElement('div'),
+        el: document.createElement('div'), // 作用是什么, vm.$mount(vm.$options.el) 需要用到
         data: {
           text: vm && vm[textExr] || textExr,
           spinner: vm && vm[spinnerExr] || spinnerExr,
@@ -104,8 +105,8 @@ loadingDirective.install = Vue => {
           fullscreen: !!binding.modifiers.fullscreen
         }
       });
-      el.instance = mask;
-      el.mask = mask.$el;
+      el.instance = mask; // 在el上挂一个Loading组件实例
+      el.mask = mask.$el; // 在el上挂一个Loading的dom真实元素
       el.maskStyle = {};
 
       binding.value && toggleLoading(el, binding);
@@ -125,7 +126,7 @@ loadingDirective.install = Vue => {
         el.mask.parentNode.removeChild(el.mask);
         toggleLoading(el, { value: false, modifiers: binding.modifiers });
       }
-      el.instance && el.instance.$destroy();
+      el.instance && el.instance.$destroy(); // 销毁el元素上挂的loading组件实例
     }
   });
 };

@@ -87,7 +87,7 @@ const showNextMsg = () => {
       currentMsg = msgQueue.shift(); // 取出队列中的第一个
 
       let options = currentMsg.options;
-      // 给instance实例设置属性
+      // 给instance实例设置属性 => 类似this.prop = ss 
       for (let prop in options) {
         if (options.hasOwnProperty(prop)) {
           instance[prop] = options[prop];
@@ -114,10 +114,10 @@ const showNextMsg = () => {
           instance[prop] = true;
         }
       });
-      document.body.appendChild(instance.$el);
+      document.body.appendChild(instance.$el); // 追加元素到document.body
 
       Vue.nextTick(() => {
-        instance.visible = true;
+        instance.visible = true; // 设置可见
       });
     }
   }
