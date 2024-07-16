@@ -219,7 +219,7 @@
           this.validateMessage = errors ? errors[0].message : '';
 
           callback(this.validateMessage, invalidFields);
-          this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.validateMessage || null); // 这一步什么作用
+          this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.validateMessage || null); // 这一步什么作用, 看el-form组件上是否有传自定义validate事件
         });
       },
       clearValidate() {
@@ -305,6 +305,7 @@
     },
     mounted() {
       if (this.prop) {
+        // 触发el.form.addField 事件
         this.dispatch('ElForm', 'el.form.addField', [this]);
 
         let initialValue = this.fieldValue; // 获取初始值

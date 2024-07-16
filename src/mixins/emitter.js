@@ -25,7 +25,7 @@ export default {
         }
       }
       if (parent) {
-        parent.$emit.apply(parent, [eventName].concat(params));
+        parent.$emit.apply(parent, [eventName].concat(params)); // 触发事件
       }
     },
     // 往子级一层一层找，找到组件名相同的组件，再调用其$emit函数

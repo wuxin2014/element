@@ -74,6 +74,7 @@
       };
     },
     created() {
+      // 注册el.form.addField事件
       this.$on('el.form.addField', (field) => {
         if (field) {
           this.fields.push(field);
@@ -131,11 +132,13 @@
         let invalidFields = {};
         // 所有字段循环验证
         this.fields.forEach(field => {
+          // formItem的validate => callback入参是message， field
           field.validate('', (message, field) => {
             if (message) {
               valid = false;
             }
             invalidFields = objectAssign({}, invalidFields, field);
+            // 验证完所有字段才执行callback
             if (typeof callback === 'function' && ++count === this.fields.length) {
               callback(valid, invalidFields);
             }
