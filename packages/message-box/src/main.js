@@ -87,7 +87,7 @@ const showNextMsg = () => {
       currentMsg = msgQueue.shift(); // 取出队列中的第一个
 
       let options = currentMsg.options;
-      // 给instance实例设置属性 => 类似this.prop = ss 
+      // 给instance实例设置属性 => 类似this.prop = ss
       for (let prop in options) {
         if (options.hasOwnProperty(prop)) {
           instance[prop] = options[prop];

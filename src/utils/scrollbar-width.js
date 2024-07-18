@@ -14,14 +14,14 @@ export default function() {
   outer.style.top = '-9999px';
   document.body.appendChild(outer);
 
-  const widthNoScroll = outer.offsetWidth;
+  const widthNoScroll = outer.offsetWidth; // width + padding + border
   outer.style.overflow = 'scroll';
 
   const inner = document.createElement('div');
   inner.style.width = '100%';
   outer.appendChild(inner);
 
-  const widthWithScroll = inner.offsetWidth; // width + padding + border, 滚动条宽排除在外
+  const widthWithScroll = inner.offsetWidth; // width + padding + border
   outer.parentNode.removeChild(outer);
   scrollBarWidth = widthNoScroll - widthWithScroll;
 

@@ -40,6 +40,7 @@ export default {
   },
   // 渲染函数
   render(h) {
+    debugger
     let gutter = scrollbarWidth();
     let style = this.wrapStyle;
 
@@ -56,7 +57,7 @@ export default {
         style = gutterStyle;
       }
     }
-    // 视图
+    // 内容视图
     const view = h(this.tag, {
       class: ['el-scrollbar__view', this.viewClass],
       style: this.viewStyle,
@@ -100,11 +101,12 @@ export default {
   },
 
   methods: {
+    // 1. 鼠标滚轮触发滚动
     handleScroll() {
       const wrap = this.wrap;
 
-      this.moveY = ((wrap.scrollTop * 100) / wrap.clientHeight); // 元素top滚动距离 / 元素可视区高度 这是计算什么？移动百分比
-      this.moveX = ((wrap.scrollLeft * 100) / wrap.clientWidth);
+      this.moveY = ((wrap.scrollTop * 100) / wrap.clientHeight); // 元素top滚动距离 / 元素可视区高度 这是计算什么？Y方向的移动百分比
+      this.moveX = ((wrap.scrollLeft * 100) / wrap.clientWidth); // X方向的移动百分比
     },
 
     update() {

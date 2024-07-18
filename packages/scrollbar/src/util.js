@@ -1,8 +1,8 @@
 export const BAR_MAP = {
   vertical: {
-    offset: 'offsetHeight',
+    offset: 'offsetHeight', // width + padding + border
     scroll: 'scrollTop',
-    scrollSize: 'scrollHeight',
+    scrollSize: 'scrollHeight', // width + padding - scrollBarWidth
     size: 'height',
     key: 'vertical',
     axis: 'Y', // Y轴
@@ -25,8 +25,8 @@ export function renderThumbStyle({ move, size, bar }) {
   const style = {};
   const translate = `translate${bar.axis}(${ move }%)`;
 
-  style[bar.size] = size;
-  style.transform = translate;
+  style[bar.size] = size; // 滚动条的长度(宽或者高)
+  style.transform = translate; // 滚动条位移
   style.msTransform = translate;
   style.webkitTransform = translate;
 
