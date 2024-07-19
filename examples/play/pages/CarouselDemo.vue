@@ -1,6 +1,6 @@
 <template>
-    <div style="border: 1px solid red">
-      <el-carousel :interval="5000" type="card" height="150px">
+    <div style="width: 980px; background: aliceblue; padding: 40px 0;">
+      <el-carousel :interval="5000" type="card" height="150px" :autoplay="false">
         <el-carousel-item v-for="item in 6" :key="item">
           <h3>{{ item }}</h3>
         </el-carousel-item>

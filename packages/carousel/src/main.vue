@@ -105,7 +105,7 @@ export default {
   data() {
     return {
       items: [],
-      activeIndex: -1,
+      activeIndex: -1, // 活动项下标
       containerWidth: 0,
       timer: null,
       hover: false
@@ -143,12 +143,10 @@ export default {
 
   watch: {
     items(val) {
-      debugger
       if (val.length > 0) this.setActiveItem(this.initialIndex);
     },
-
+    // 活动项下表
     activeIndex(val, oldVal) {
-      debugger
       this.resetItemPosition(oldVal);
       if (oldVal > -1) {
         this.$emit('change', val, oldVal);
@@ -170,11 +168,12 @@ export default {
   },
 
   methods: {
+    // 鼠标移入事件
     handleMouseEnter() {
       this.hover = true;
       this.pauseTimer();
     },
-
+    // 鼠标移出事件
     handleMouseLeave() {
       this.hover = false;
       this.startTimer();
@@ -209,11 +208,12 @@ export default {
     },
 
     updateItems() {
+      // 从$children中过滤出组件名为ElCarouselItem的子项
       this.items = this.$children.filter(child => child.$options.name === 'ElCarouselItem');
     },
 
     resetItemPosition(oldIndex) {
-      debugger
+      // 处理所有项的位置
       this.items.forEach((item, index) => {
         item.translateItem(index, this.activeIndex, oldIndex);
       });
@@ -243,7 +243,7 @@ export default {
       this.pauseTimer();
       this.startTimer();
     },
-    // 设置激活的Item
+    // 设置当前活动项的下标值
     setActiveItem(index) {
       if (typeof index === 'string') {
         const filteredItems = this.items.filter(item => item.name === index);
@@ -251,13 +251,13 @@ export default {
           index = this.items.indexOf(filteredItems[0]);
         }
       }
-      index = Number(index);
+      index = Number(index); // 下标值转化成数字
       if (isNaN(index) || index !== Math.floor(index)) {
         console.warn('[Element Warn][Carousel]index must be an integer.');
         return;
       }
       let length = this.items.length;
-      const oldIndex = this.activeIndex; // 记录旧的activeIndex
+      const oldIndex = this.activeIndex; // 默认活动项下标是-1
       // activeIndex设置新的值
       if (index < 0) {
         this.activeIndex = this.loop ? length - 1 : 0;
@@ -302,10 +302,9 @@ export default {
   },
 
   mounted() {
-    debugger
     this.updateItems();
+    // 因为监听的this.$el，所以使用了$nextTick函数
     this.$nextTick(() => {
-      debugger
       addResizeListener(this.$el, this.resetItemPosition);
       if (this.initialIndex < this.items.length && this.initialIndex >= 0) {
         this.activeIndex = this.initialIndex;

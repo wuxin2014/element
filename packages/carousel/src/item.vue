@@ -61,10 +61,14 @@
       },
       /**
        * 什么规律，看不出来，
+       * 一开始el-carousel-item 都是绝对定位元素width: 50%，left: 0,top: 0,z-index: 0
        * 假设容器宽度980，item的宽度样式设置为50%，也就是容器宽度的一半即980/2 = 490
-       * 1. 若在容器正中央，需水平偏移(980-490)/2
-       * 2. 若在容器右侧，需水平偏移(980-490) + 490*(1-0.83)/2
-       * 3. 若在容器左侧，需水平偏移490*(1-0.83)/2 * -1
+       * 1. 若在容器正中央，需水平偏移(980-490)/2 = 980/4
+       * 2. 若在容器右侧，需水平偏移490 + (490 - 490 * 0.83)/2 = 980/4 * 2 + 980/4 * (1-0.83)
+       * 3. 若在容器左侧，需水平偏移(490*0.83 - 490) / 2 = 980/4 * (0.83 - 1) = -41.65
+       * 
+       * 右侧加1项： 980 - (490*0.83 - 490) / 2 = 938.35
+       * 左侧加1项： -490 + (490*0.83 - 490) / 2 = -448.35
        *
        */
       calcCardTranslate(index, activeIndex) {
@@ -98,10 +102,10 @@
           if (parentDirection === 'vertical') {
             console.warn('[Element Warn][Carousel]vertical direction is not supported in card mode');
           }
-          this.inStage = Math.round(Math.abs(index - activeIndex)) <= 1; // 是否在正中央
-          this.active = index === activeIndex;
+          this.inStage = Math.round(Math.abs(index - activeIndex)) <= 1; // 是否在台上
+          this.active = index === activeIndex; // 当前项是否为活跃项
           this.translate = this.calcCardTranslate(index, activeIndex); // 平移计算
-          this.scale = this.active ? 1 : CARD_SCALE; // 激活item不缩放，其他缩放
+          this.scale = this.active ? 1 : CARD_SCALE; // 激活item不缩放，其他项缩放
         } else {
           // 普通类型轮播平移计算
           this.active = index === activeIndex;
