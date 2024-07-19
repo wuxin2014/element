@@ -1,11 +1,16 @@
 <template>
-  <div v-show="ready" class="el-carousel__item" :class="{
-    'is-active': active,
-    'el-carousel__item--card': $parent.type === 'card',
-    'is-in-stage': inStage,
-    'is-hover': hover,
-    'is-animating': animating
-  }" @click="handleItemClick" :style="itemStyle">
+  <div
+    v-show="ready"
+    class="el-carousel__item"
+    :class="{
+      'is-active': active,
+      'el-carousel__item--card': $parent.type === 'card',
+      'is-in-stage': inStage,
+      'is-hover': hover,
+      'is-animating': animating
+    }"
+    @click="handleItemClick"
+    :style="itemStyle">
     <!-- <div v-if="$parent.type === 'card'" v-show="!active" class="el-carousel__mask">
     </div> -->
     <slot></slot>
@@ -18,7 +23,7 @@ const CARD_SCALE = 0.83;
 const CARD_SCALE2 = 0.7;
 export default {
   name: 'ElCarouselItem',
- 
+
   props: {
     name: String,
     label: {
@@ -26,7 +31,7 @@ export default {
       default: ''
     }
   },
- 
+
   data() {
     return {
       hover: false,
@@ -39,7 +44,7 @@ export default {
       opacity: 1
     };
   },
- 
+
   methods: {
     processIndex(index, activeIndex, length) {
       if ((activeIndex === 0 || activeIndex === 1) && index === length - 1) {
@@ -53,25 +58,23 @@ export default {
       }
       return index;
     },
- 
+
     calcCardTranslate(index, activeIndex) {
       const parentWidth = this.$parent.$el.offsetWidth;
       if (this.inStage) {
         return parentWidth * ((index - activeIndex) + 2) / 5;
-      }
-      else if (index < activeIndex) {
+      } else if (index < activeIndex) {
         return 0 * parentWidth / 5;
-      }
-      else {
+      } else {
         return 4 * parentWidth / 5;
       }
     },
- 
+
     calcTranslate(index, activeIndex, isVertical) {
       const distance = this.$parent.$el[isVertical ? 'offsetHeight' : 'offsetWidth'];
       return distance * (index - activeIndex);
     },
- 
+
     translateItem(index, activeIndex, oldIndex) {
       const parentType = this.$parent.type;
       const parentDirection = this.parentDirection;
@@ -103,7 +106,6 @@ export default {
             this.opacity = 0
           }
         }
-        console.log(index, activeIndex)
       } else {
         this.active = index === activeIndex;
         const isVertical = parentDirection === 'vertical';
@@ -112,7 +114,7 @@ export default {
       }
       this.ready = true;
     },
- 
+
     handleItemClick() {
       const parent = this.$parent;
       if (parent && parent.type === 'card') {
@@ -121,12 +123,12 @@ export default {
       }
     }
   },
- 
+
   computed: {
     parentDirection() {
       return this.$parent.direction;
     },
- 
+
     itemStyle() {
       const translateType = this.parentDirection === 'vertical' ? 'translateY' : 'translateX';
       const value = `${translateType}(${this.translate}px) scale(${this.scale})`;
@@ -137,11 +139,11 @@ export default {
       return autoprefixer(style);
     }
   },
- 
+
   created() {
     this.$parent && this.$parent.updateItems();
   },
- 
+
   destroyed() {
     this.$parent && this.$parent.updateItems();
   }

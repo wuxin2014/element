@@ -20,13 +20,13 @@ export default {
   data () {
     return {
       dataList: [
-        { photo: require('../../assets/images/compo-1.png'), title: '测试1' }, 
-        { photo: require('../../assets/images/compo-2.png'), title: '测试2' }, 
-        { photo: require('../../assets/images/compo-3.png'), title: '测试3' }, 
+        { photo: require('../../assets/images/feedback.png'), title: '测试1' }, 
+        { photo: require('../../assets/images/feedback.png'), title: '测试2' }, 
+        { photo: require('../../assets/images/feedback.png'), title: '测试3' }, 
         { photo: require('../../assets/images/feedback.png'), title: '测试4' }, 
-        { photo: require('../../assets/images/hamburger.png'), title: '测试5' }, 
-        { photo: require('../../assets/images/guide.png'), title: '测试6' }, 
-        { photo: require('../../assets/images/efficiency.png'), title: '测试7' }
+        { photo: require('../../assets/images/feedback.png'), title: '测试5' }, 
+        { photo: require('../../assets/images/feedback.png'), title: '测试6' }, 
+        { photo: require('../../assets/images/feedback.png'), title: '测试7' }
       ]
     }
   },
@@ -42,8 +42,11 @@ export default {
 }
 .imgBox {
   width: 100%;
+  background-color: pink;
   img {
-    width: 100%;
+    width: 80px;
+    height: 80px;
+    background-size: cover;
   }
 }
 </style>

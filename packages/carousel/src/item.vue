@@ -49,12 +49,16 @@
     methods: {
       processIndex(index, activeIndex, length) {
         if (activeIndex === 0 && index === length - 1) {
+          // 例如 [0,1,2,3,4,5] => activeIndex为0 左右各一个
           return -1; // 放置到最左侧
         } else if (activeIndex === length - 1 && index === 0) {
+          // 例如 [0,1,2,3,4,5] => activeIndex为5 左右各一个, 最后得到[1,2,3,4,5,0]
           return length; // 放置到最右侧
         } else if (index < activeIndex - 1 && activeIndex - index >= length / 2) {
+          // 例如 [0,1,2,3,4,5] => activeIndex为3 左右各一个, 最后得到[1,2,3,4,5,0]
           return length + 1; // 放置到右侧+1
         } else if (index > activeIndex + 1 && index - activeIndex >= length / 2) {
+          // 例如 [0,1,2,3,4,5] => activeIndex为0 左右各一个, index > activeIndex+1 最后得到[3,4,5,0,1,2]
           return -2; // 放置到左侧-1
         }
         return index;
@@ -63,11 +67,12 @@
        * 什么规律，看不出来，
        * 一开始el-carousel-item 都是绝对定位元素width: 50%，left: 0,top: 0,z-index: 0
        * 假设容器宽度980，item的宽度样式设置为50%，也就是容器宽度的一半即980/2 = 490
+       * 展示台上三项
        * 1. 若在容器正中央，需水平偏移(980-490)/2 = 980/4
        * 2. 若在容器右侧，需水平偏移490 + (490 - 490 * 0.83)/2 = 980/4 * 2 + 980/4 * (1-0.83)
        * 3. 若在容器左侧，需水平偏移(490*0.83 - 490) / 2 = 980/4 * (0.83 - 1) = -41.65
-       * 
-       * 右侧加1项： 980 - (490*0.83 - 490) / 2 = 938.35
+       * 展示台外其他项
+       * 右侧加1项： 980 + (490*0.83 - 490) / 2 = 938.35
        * 左侧加1项： -490 + (490*0.83 - 490) / 2 = -448.35
        *
        */
