@@ -1,6 +1,13 @@
 <template>
   <div>
-    <el-carousel :interval="3000" type="card" height="320px" :autoplay="false" style="width: 70vw; background: aliceblue">
+    <div style="display: flex; width: 1000px; background: aliceblue; padding: 20px 0">
+      <div style="width: 20%; height: 100px; background-color: aqua;"></div>
+      <div style="width: 20%; height: 100px; background-color: antiquewhite;"></div>
+      <div style="width: 20%; height: 100px; background-color: chocolate;"></div>
+      <div style="width: 20%; height: 100px; background-color: darkgreen;"></div>
+      <div style="width: 20%; height: 100px; background-color: gold;"></div>
+    </div>
+    <el-carousel :interval="3000" type="card" height="160px" :autoplay="false" style="width: 1000px; background: aliceblue; padding: 20px 0">
       <SwiperItem v-for="(item, i) in dataList" :key="i">
         <div class="imgBox">
            <img class="imgItem" :src="item.photo" alt="" srcset="" />
@@ -42,7 +49,9 @@ export default {
 }
 .imgBox {
   width: 100%;
+  height: 100%;
   background-color: pink;
+
   img {
     width: 80px;
     height: 80px;

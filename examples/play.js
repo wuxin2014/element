@@ -6,7 +6,7 @@ import 'packages/theme-chalk/src/index.scss';
 // import App from './play/pages/TimePickerDemo2'
 // import App from './play/pages/SelectDemo'
 // import App from './play/pages/DialogDemo1'
-import App from './play/pages/FormDemo'
+import App from './play/pages/CarouselDemo3'
 // import App from './play/pages/DatePickerDemo'
 // import App from './play/pages/TableFilterDemo'
 

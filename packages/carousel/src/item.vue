@@ -49,17 +49,13 @@
     methods: {
       processIndex(index, activeIndex, length) {
         if (activeIndex === 0 && index === length - 1) {
-          // 例如 [0,1,2,3,4,5] => activeIndex为0 左右各一个
-          return -1; // 放置到最左侧
+          return -1; // 放置到展示台上最左侧
         } else if (activeIndex === length - 1 && index === 0) {
-          // 例如 [0,1,2,3,4,5] => activeIndex为5 左右各一个, 最后得到[1,2,3,4,5,0]
-          return length; // 放置到最右侧
+          return length; // 放置到展示台上最右侧
         } else if (index < activeIndex - 1 && activeIndex - index >= length / 2) {
-          // 例如 [0,1,2,3,4,5] => activeIndex为3 左右各一个, 最后得到[1,2,3,4,5,0]
-          return length + 1; // 放置到右侧+1
+          return length + 1; // 放置到右侧+1(台外)
         } else if (index > activeIndex + 1 && index - activeIndex >= length / 2) {
-          // 例如 [0,1,2,3,4,5] => activeIndex为0 左右各一个, index > activeIndex+1 最后得到[3,4,5,0,1,2]
-          return -2; // 放置到左侧-1
+          return -2; // 放置到左侧-1(台外)
         }
         return index;
       },
@@ -79,11 +75,11 @@
       calcCardTranslate(index, activeIndex) {
         const parentWidth = this.$parent.$el.offsetWidth;
         if (this.inStage) {
-          return parentWidth * ((2 - CARD_SCALE) * (index - activeIndex) + 1) / 4;
+          return parentWidth * ((2 - CARD_SCALE) * (index - activeIndex) + 1) / 4; // 展示台上平移距离
         } else if (index < activeIndex) {
-          return -(1 + CARD_SCALE) * parentWidth / 4;
+          return -(1 + CARD_SCALE) * parentWidth / 4; // 展示台外左侧(不可见)平移距离
         } else {
-          return (3 + CARD_SCALE) * parentWidth / 4;
+          return (3 + CARD_SCALE) * parentWidth / 4; // 展示台外右侧(不可见)平移距离
         }
       },
 
