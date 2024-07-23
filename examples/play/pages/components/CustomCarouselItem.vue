@@ -111,9 +111,13 @@ export default {
 
     calcCardTranslate(index, activeIndex) {
       const parentWidth = this.$parent.$el.offsetWidth;
+      // 5张卡片，每张卡片占20% => 下边0.2的所指
       if (index == 0) {
-        return parentWidth * (0.5 - 0.22 / 2);
+        return parentWidth * (1 - 0.22) / 2; // 中间卡片width是22%
       } else if (Math.abs(index) == 1) {
+        // return index > 0 
+        //   ? parentWidth * 0.5 + parentWidth * 0.22 / 2 - (parentWidth * 0.28 - parentWidth * 0.2) // 右一卡片宽度是28%
+        //   : parentWidth * 0.5 - parentWidth * 0.22 / 2 - parentWidth * 0.2 // 左一
         return index > 0 ? parentWidth * (0.5 + 0.22 / 2 - 0.08) : parentWidth * (0.5 - (0.28 - 0.08 + 0.22 / 2));
       } else {
         return index > 0 ? parentWidth * (0.5 + 0.22 / 2 + 0.28 - 0.08 - 0.13) : parentWidth * (0.5 - (0.28 - 0.08 + 0.22 / 2) - (0.28 - 0.13));
