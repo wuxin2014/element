@@ -1,5 +1,6 @@
 <template>
   <div class="scroll">
+    <p>普通轮播，卡片轮播，堆叠轮播, 百叶窗轮播图</p>
     <list-scroll class="box" :speed="1" :length="list.length">
       <div class="list">
         <div class="item" v-for="item in list" :key="item.xh">
