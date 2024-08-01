@@ -137,12 +137,14 @@ class TableLayout {
     let bodyMinWidth = 0;
 
     const flattenColumns = this.getFlattenColumns();
+    // 过滤无效宽度属性的列
     let flexColumns = flattenColumns.filter((column) => typeof column.width !== 'number');
 
     flattenColumns.forEach((column) => { // Clean those columns whose width changed from flex to unflex
       if (typeof column.width === 'number' && column.realWidth) column.realWidth = null;
     });
 
+    // 没有设置宽度的列，宽度自适应。计算逻辑如下
     if (flexColumns.length > 0 && fit) {
       flattenColumns.forEach((column) => {
         bodyMinWidth += column.width || column.minWidth || 80;
@@ -164,11 +166,11 @@ class TableLayout {
 
           flexColumns.forEach((column, index) => {
             if (index === 0) return;
-            const flexWidth = Math.floor((column.minWidth || 80) * flexWidthPerPixel);
+            const flexWidth = Math.floor((column.minWidth || 80) * flexWidthPerPixel); // 自适应宽度
             noneFirstWidth += flexWidth;
-            column.realWidth = (column.minWidth || 80) + flexWidth;
+            column.realWidth = (column.minWidth || 80) + flexWidth; // 注意realWidth的重新设值
           });
-
+          // 无效宽度的列数组中第0个的realWidth赋值
           flexColumns[0].realWidth = (flexColumns[0].minWidth || 80) + totalFlexWidth - noneFirstWidth;
         }
       } else { // HAVE HORIZONTAL SCROLL BAR
@@ -194,7 +196,7 @@ class TableLayout {
 
       this.bodyWidth = bodyMinWidth;
     }
-
+    // 固定列数组
     const fixedColumns = this.store.states.fixedColumns;
 
     if (fixedColumns.length > 0) {

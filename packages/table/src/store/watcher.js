@@ -28,6 +28,7 @@ const doFlattenColumns = (columns) => {
 export default Vue.extend({
   data() {
     return {
+      // 存储的数据states
       states: {
         // 3.0 版本后要求必须设置该属性
         rowKey: null,

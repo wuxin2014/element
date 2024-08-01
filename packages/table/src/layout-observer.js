@@ -34,6 +34,7 @@ export default {
 
   methods: {
     onColumnsChange(layout) {
+      // colgroup标签用来控制列的样式，如宽度
       const cols = this.$el.querySelectorAll('colgroup > col');
       if (!cols.length) return;
       const flattenColumns = layout.getFlattenColumns();
@@ -46,6 +47,7 @@ export default {
         const name = col.getAttribute('name');
         const column = columnsMap[name];
         if (column) {
+          // 动态设置了col的width属性
           col.setAttribute('width', column.realWidth || column.width);
         }
       }

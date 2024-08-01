@@ -291,7 +291,7 @@ export default {
     const chains = compose(this.setColumnRenders, this.setColumnWidth, this.setColumnForcedProps);
     column = chains(column);
 
-    this.columnConfig = column;
+    this.columnConfig = column; // 列的属性对象
 
     // 注册 watcher
     this.registerNormalWatchers();

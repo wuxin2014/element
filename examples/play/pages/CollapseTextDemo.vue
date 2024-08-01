@@ -94,7 +94,6 @@ export default {
     width: 400px;
     height: 100%;
     overflow: hidden;
-    clear: both;
   }
 
   .item {
