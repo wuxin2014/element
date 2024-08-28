@@ -145,7 +145,7 @@ export default {
                     this.checkedList = this.checkedList.filter(code => code !== data[this.fieldValue]);
                 }
                 
-                if (this.checkedList.length === this.options.length) {
+                if (this.checkedList.length === this.optionList.length) {
                     this.checkedList.unshift('all');
                 }
             }
