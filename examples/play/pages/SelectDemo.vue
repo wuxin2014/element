@@ -2,7 +2,7 @@
   <div style="padding: 10px">
     <el-form :model="form" :rules="rules" label-width="100px" ref="formRef">
       <el-row>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="科目" prop="subject">
             <multiple-select
               v-model="form.subject"
@@ -11,11 +11,12 @@
             </multiple-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="标签" prop="tag">
             <el-select
               v-model="form.tag"
-              value-key="code">
+              value-key="code"
+              style="width: 100%">
               <el-option
                 v-for="item in options"
                 :key="item.code"
@@ -25,7 +26,12 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-form-item label="合约">
+            <select-tree :treeList="treeList"></select-tree>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
           <el-form-item label-width="40px">
             <el-button type="primary" @click="handleSubmit">提交</el-button>
           </el-form-item>
@@ -37,9 +43,11 @@
 
 <script>
 import MultipleSelect from './components/CustomMultipleSelect.vue'
+import SelectTree from './components/SelectTree.vue'
 export default {
   components: {
-    MultipleSelect
+    MultipleSelect,
+    SelectTree
   },
   data() {
     return {
@@ -61,7 +69,72 @@ export default {
       rules: {
         subject: [{ type: 'array', required: true, message: '请至少选择一个科目', trigger: 'change' }],
         tag: [{ type: 'object', required: true, message: '请选择文章标签', trigger: 'change' }]
-      }
+      },
+      treeList: [
+        {
+          id: '1',
+          label: 'IC-中证500指数',
+          children: [
+            {
+              id: '1-1',
+              label: 'IC2403-中证500期货11',
+              children: [
+                {
+                  id: '1-1-1',
+                  label: '三级 1-1-1'
+                },
+                {
+                  id: '1-1-2',
+                  label: '三级 1-1-2'
+                }
+              ]
+            },
+            {
+              id: '1-2',
+              label: 'IC2404-中证500期货11',
+              children: [
+                {
+                  id: '1-2-1',
+                  label: '三级 1-2-1'
+                },
+                {
+                  id: '1-2-2',
+                  label: '三级 1-2-2'
+                }
+              ]
+            },
+            {
+              id: '1-3',
+              label: 'IC2405-中证500期货11',
+              children: [
+                {
+                  id: '1-3-1',
+                  label: '三级 1-3-1'
+                },
+                {
+                  id: '1-3-2',
+                  label: '三级 1-3-2'
+                }
+              ]
+            }
+          ]
+        }, 
+        {
+          id: '2',
+          label: 'IF-沪深300指数',
+          children: [
+            {
+              id: '2-1',
+              label: '二级 2-1'
+            }, 
+            {
+              id: '2-2',
+              label: '二级 2-2'
+            }
+          ]
+        }, 
+      ],
+      
     }
   },
   mounted() {
