@@ -19,7 +19,8 @@ export default {
       if (!value) return
 
       if (isNaN(Number(value))) {
-        this.moneyValue = ''
+        // this.moneyValue = ''
+        this.moneyValue = value.substring(0, value.length - 1)
         return
       }
 

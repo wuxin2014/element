@@ -28,7 +28,7 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="合约">
-            <select-tree :treeList="treeList"></select-tree>
+            <select-tree v-model="form.contract" :tree-list="treeList"></select-tree>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -64,7 +64,8 @@ export default {
       ],
       form: {
         subject: ['all'],
-        tag: null
+        tag: null,
+        contract: ''
       },
       rules: {
         subject: [{ type: 'array', required: true, message: '请至少选择一个科目', trigger: 'change' }],
