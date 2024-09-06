@@ -8,14 +8,22 @@
     </div>
     <transition name="el-fade-in">
       <div v-show="visible" class="popper">
-        <el-tree
-          ref="tree"
-          show-checkbox
-          node-key="id"
-          :data="treeList"
-          :props="defaultProps"
-          :default-checked-keys="checkedKeys">
-        </el-tree>
+        <!-- indeterminate 属性用以表示 checkbox 的不确定状态，一般用于实现全选的效果 -->
+        <el-checkbox :indeterminate="isIndeterminate" v-model="checkedAll" @change="handleAllChange">全部</el-checkbox>
+        <el-scrollbar
+          tag="div"
+          wrap-class="select-tree-dropdown-wrap"
+          ref="scrollbar">
+          <el-tree
+            ref="tree"
+            show-checkbox
+            node-key="id"
+            :data="treeList"
+            :props="defaultProps"
+            :default-checked-keys="checkedKeys"
+            @check="handleTreeChange">
+          </el-tree>
+        </el-scrollbar>
         <div class="btn-wrap">
           <el-button type="primary" @click="handleOK">确定</el-button>
           <el-button @click="visible = false" style="margin-left: 24px;">取消</el-button>
@@ -40,8 +48,8 @@ const handleData = (arrayTree, result = []) => {
 export default {
   props: {
     value: {
-      type: [Array, String],
-      default: ''
+      type: Array,
+      default: () => []
     },
     treeList: {
       type: Array,
@@ -56,54 +64,88 @@ export default {
         label: 'label'
       },
       visible: false,
+      list: [],
       checkedKeys: [],
-      checkedNames: [],
-      list: []
-    }
-  },
-  computed: {
-    showLabel() {
-      const checkedLen = this.checkedNames.length
-      return (checkedLen === 0 || this.list.length === checkedLen) ? '全部' : this.checkedNames.join(';')
+      checkedAll: false,
+      showLabel: '全部',
+      isIndeterminate: true
     }
   },
   watch: {
     treeList: {
       handler(newVal) {
+        const list = handleData(newVal, [])
+        this.list = list
         this.initData()
+      },
+      immediate: true
+    },
+    visible(newVal) {
+      if (!newVal) return
+      if (this.value.length === 0) {
+        this.initData()
+      } else {
+        this.checkedKeys = this.value;
+        this.setCheckedKeys(this.checkedKeys)
+        this.$nextTick(() => {
+          const checkedCount = this.getCheckedNodes().length 
+          this.checkedAll = checkedCount === this.list.length
+          this.isIndeterminate = checkedCount > 0 && checkedCount < this.list.length
+        })
       }
     }
   },
   mounted() {
-    this.initData()
-    this.initCheckedData()
   },
   methods: {
-    initData() {
-      const list = handleData(this.treeList, [])
-      this.list = list
+    getCheckedKeys() {
+      return this.$refs.tree.getCheckedKeys();
     },
-    initCheckedData() {
-      let checkedKeys = []
-      let checkedNames = []
-      this.list.forEach(item => {
-        checkedKeys.push(item.id)
-        checkedNames.push(item.label)
-      })
-      this.checkedKeys = checkedKeys
-      this.checkedNames = checkedNames
+    getCheckedNodes() {
+      return this.$refs.tree.getCheckedNodes();
+    },
+    setCheckedKeys(checkedKeys) {
+      this.$refs.tree.setCheckedKeys(checkedKeys);
+    },
+    initData() {
+      this.checkedAll = true
+      this.showLabel = '全部'
+      this.checkedKeys = this.list.map(item => item.id)
+      this.isIndeterminate = false
+    },
+    handleAllChange() {
+      if (this.checkedAll) {
+        this.checkedKeys = this.list.map(item => item.id)
+      } else {
+        this.checkedKeys = []
+      }
+      this.setCheckedKeys(this.checkedKeys)
+      this.isIndeterminate = false;
+    },
+    handleTreeChange(v1, v2) {
+      console.log(v1, v2)
+      const checkedCount = v2.checkedNodes.length 
+      this.checkedAll = checkedCount === this.list.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.list.length
     },
     handleOK() {
-      const checkedNodes = this.$refs.tree.getCheckedNodes();
-      const checkedKeys = this.$refs.tree.getCheckedKeys();
-      console.log(checkedNodes, checkedKeys);
-      if (checkedKeys.length > 0) {
-        this.checkedNames = checkedNodes.map(item => item.label)
-        this.$emit('input', checkedKeys)
+      const checkedNodes = this.getCheckedNodes()
+      if (checkedNodes.length === 0) {
+        this.$message.error('至少选择一项')
+        return
       }
+      let checkedIds = []
+      let labelList = []
+      checkedNodes.filter(item => !!item.pid).forEach(item => {
+        checkedIds.push(item.id)
+        labelList.push(item.label)
+      })
+      this.showLabel = this.checkedAll ? '全部' : labelList.join(';')
+      this.$emit('input', checkedIds)
       this.visible = false
     },
     handleClose() {
+      document.querySelector('.select-tree-dropdown-wrap').scrollTo(0, 0)
       this.visible = false;
     }
   }
@@ -148,6 +190,10 @@ export default {
     justify-content: center;
     align-items: center;
     padding-top: 20px;
+  }
+
+  ::v-deep .select-tree-dropdown-wrap {
+    max-height: 240px;
   }
 }
 </style>

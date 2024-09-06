@@ -65,7 +65,7 @@ export default {
       form: {
         subject: ['all'],
         tag: null,
-        contract: ''
+        contract: []
       },
       rules: {
         subject: [{ type: 'array', required: true, message: '请至少选择一个科目', trigger: 'change' }],
@@ -77,46 +77,19 @@ export default {
           label: 'IC-中证500指数',
           children: [
             {
+              pid: '1',
               id: '1-1',
               label: 'IC2403-中证500期货11',
-              children: [
-                {
-                  id: '1-1-1',
-                  label: '三级 1-1-1'
-                },
-                {
-                  id: '1-1-2',
-                  label: '三级 1-1-2'
-                }
-              ]
             },
             {
+              pid: '1',
               id: '1-2',
               label: 'IC2404-中证500期货11',
-              children: [
-                {
-                  id: '1-2-1',
-                  label: '三级 1-2-1'
-                },
-                {
-                  id: '1-2-2',
-                  label: '三级 1-2-2'
-                }
-              ]
             },
             {
+              pid: '1',
               id: '1-3',
               label: 'IC2405-中证500期货11',
-              children: [
-                {
-                  id: '1-3-1',
-                  label: '三级 1-3-1'
-                },
-                {
-                  id: '1-3-2',
-                  label: '三级 1-3-2'
-                }
-              ]
             }
           ]
         }, 
@@ -125,12 +98,14 @@ export default {
           label: 'IF-沪深300指数',
           children: [
             {
+              pid: '2',
               id: '2-1',
-              label: '二级 2-1'
+              label: 'IF-2-1'
             }, 
             {
+              pid: '2',
               id: '2-2',
-              label: '二级 2-2'
+              label: 'IF-2-2'
             }
           ]
         }, 
