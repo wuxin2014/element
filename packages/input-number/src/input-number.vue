@@ -115,6 +115,7 @@
       value: {
         immediate: true,
         handler(value) {
+          debugger
           let newVal = value === undefined ? value : Number(value);
           if (newVal !== undefined) {
             if (isNaN(newVal)) {
@@ -171,6 +172,7 @@
         return this.disabled || !!(this.elForm || {}).disabled;
       },
       displayValue() {
+        debugger
         if (this.userInput !== null) {
           return this.userInput; // 用户输入的值
         }
@@ -240,27 +242,29 @@
         this.$emit('focus', event);
       },
       setCurrentValue(newVal) {
-        const oldVal = this.currentValue;
+        const oldVal = this.currentValue; // 记录旧的值
         if (typeof newVal === 'number' && this.precision !== undefined) {
           newVal = this.toPrecision(newVal, this.precision);
         }
         if (newVal >= this.max) newVal = this.max;
         if (newVal <= this.min) newVal = this.min;
         if (oldVal === newVal) return;
-        this.userInput = null;
+        this.userInput = null; // 注意userInput的赋值
         this.$emit('input', newVal);
         this.$emit('change', newVal, oldVal);
         this.currentValue = newVal;
       },
       handleInput(value) {
+        debugger
         this.userInput = value; // 用户输入的值
       },
       handleInputChange(value) {
+        debugger
         const newVal = value === '' ? undefined : Number(value);
         if (!isNaN(newVal) || value === '') {
           this.setCurrentValue(newVal);
         }
-        this.userInput = null;
+        this.userInput = null; // 注意userInput的赋值
       },
       select() {
         this.$refs.input.select();

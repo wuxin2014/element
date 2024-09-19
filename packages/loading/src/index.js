@@ -5,6 +5,7 @@ import { PopupManager } from 'element-ui/src/utils/popup';
 import afterLeave from 'element-ui/src/utils/after-leave';
 import merge from 'element-ui/src/utils/merge';
 
+// Loading构造函数
 const LoadingConstructor = Vue.extend(loadingVue);
 
 const defaults = {
@@ -24,6 +25,7 @@ LoadingConstructor.prototype.close = function() {
   if (this.fullscreen) {
     fullscreenLoading = undefined;
   }
+  // 这一步的作用是什么
   afterLeave(this, _ => {
     const target = this.fullscreen || this.body
       ? document.body
@@ -65,6 +67,7 @@ const addStyle = (options, parent, instance) => {
 };
 
 const Loading = (options = {}) => {
+  debugger
   if (Vue.prototype.$isServer) return;
   options = merge({}, defaults, options);
   if (typeof options.target === 'string') {
