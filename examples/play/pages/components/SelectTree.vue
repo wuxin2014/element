@@ -4,7 +4,7 @@
       <div class="label-wrap">
         {{ showLabel }}
       </div>
-      <i class="el-icon-arrow-down" style="font-size: 14px; color: #c0c4cc;"></i>
+      <i class="el-icon-arrow-down" :class="{'is-reserve': visible}" style="font-size: 14px; color: #c0c4cc;"></i>
     </div>
     <transition name="el-fade-in">
       <div v-show="visible" class="popper">
@@ -72,6 +72,13 @@ export default {
     }
   },
   watch: {
+    value: {
+      handler(newVal) {
+        if (newVal.length === 0) {
+          this.initData()
+        }
+      }
+    },
     treeList: {
       handler(newVal) {
         const list = handleData(newVal, [])
@@ -172,6 +179,13 @@ export default {
     flex-flow: nowrap;
     height: 100%;
   }
+  .el-icon-arrow-down {
+    transform: rotateZ(0);
+    transition: transform .3s;
+    &.is-reserve {
+      transform: rotateZ(-180deg);
+    }
+  }
 }
 .popper {
   position: absolute;
@@ -184,6 +198,7 @@ export default {
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
   .btn-wrap {
     display: flex;

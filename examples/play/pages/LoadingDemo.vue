@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container" style="height: 600px;">
     <el-button
       type="primary"
       @click="openFullScreen1"
@@ -25,6 +25,12 @@ export default {
       fullscreenLoading: false,
     }
   },
+  mounted() {
+    this.$PLoading.show()
+    setTimeout(() => {
+      this.$PLoading.hide()
+    }, 2000);
+  },
   methods: {
     openFullScreen1() {
       this.fullscreenLoading = true;
@@ -35,13 +41,14 @@ export default {
     openFullScreen2() {
       debugger
       this.loadingInstance = this.$loading({
+        target: 'container',
         lock: true,
         text: 'Loading',
         spinner: 'el-icon-loading',
         background: 'rgba(255, 255, 255, 0.4)'
       });
       setTimeout(() => {
-        this.loadingInstance.close()
+        // this.loadingInstance.close()
       }, 2000)
     },
   }
