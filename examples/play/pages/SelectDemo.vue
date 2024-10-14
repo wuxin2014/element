@@ -109,6 +109,11 @@ export default {
             }
           ]
         }, 
+        {
+          id: '3',
+          label: 'IK-沪深300指数',
+          // disabled: true
+        },
       ],
       
     }

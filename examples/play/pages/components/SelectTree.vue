@@ -13,6 +13,7 @@
         <el-scrollbar
           tag="div"
           wrap-class="select-tree-dropdown-wrap"
+          view-class="tree-list-wrap"
           ref="scrollbar">
           <el-tree
             ref="tree"
@@ -137,13 +138,14 @@ export default {
     },
     handleOK() {
       const checkedNodes = this.getCheckedNodes()
-      if (checkedNodes.length === 0) {
+      const filterPidList = checkedNodes.filter(item => !!item.pid)
+      if (filterPidList.length === 0) {
         this.$message.error('至少选择一项')
         return
       }
       let checkedIds = []
       let labelList = []
-      checkedNodes.filter(item => !!item.pid).forEach(item => {
+      filterPidList.filter(item => !!item.pid).forEach(item => {
         checkedIds.push(item.id)
         labelList.push(item.label)
       })
@@ -204,11 +206,13 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 20px;
+    padding-top: 12px;
   }
 
   ::v-deep .select-tree-dropdown-wrap {
-    max-height: 240px;
+    max-height: 255px;
+    // padding: 6px 0; add style to resolve no more height scrollbar show issue
+    padding-bottom: 3px;
   }
 }
 </style>
