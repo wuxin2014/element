@@ -43,6 +43,7 @@
 import Clickoutside from 'element-ui/src/utils/clickoutside';
 // import { Tag } from 'element-ui'
 export default {
+    name: 'CustomMultipleSelect',
     props: {
         value: {
             type: [Array, String],

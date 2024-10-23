@@ -42,15 +42,18 @@
 </template>
 
 <script>
-import MultipleSelect from './components/CustomMultipleSelect.vue'
+import MultipleSelect from './components/MultipleSelect.vue'
+import CustomMultipleSelect from './components/CustomMultipleSelect.vue'
 import SelectTree from './components/SelectTree.vue'
 export default {
   components: {
+    CustomMultipleSelect,
     MultipleSelect,
     SelectTree
   },
   data() {
     return {
+      options1: [],
       options: [
         { code: 'HTML', label: 'HTML', name: 'HTML' }, 
         { code: 'CSS', label: 'CSS', name: 'HTML' }, 
