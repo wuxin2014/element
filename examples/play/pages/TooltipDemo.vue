@@ -1,21 +1,25 @@
 <template>
   <div>
+    <el-tooltip class="item" effect="dark" content="Top Left 提示文字上左上左上上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上上左上左上左上左上左上左上左上左上左上左上左上左上左上左" placement="top-start" popper-class="tip-popper-class">
+      <el-button>上左</el-button>
+    </el-tooltip>
     <div ref="comp" class="comp">
       <h3>Hello Vue 2 + Vite</h3>
       <el-button type="primary">按钮</el-button>
-      <el-tooltip
+      <!-- <el-tooltip
         ref="elTooltip"
         class="item"
         effect="light"
         placement="top"
+        popper-class="tip-popper-class"
         :popper-options="popperOptions">
           <el-button>上边</el-button>
           <div slot="content" class="tooltipContainer">
             <div v-for="(item, index) in 100" :key="index">{{ item }}-这是内容</div>
           </div>
-      </el-tooltip>
+      </el-tooltip> -->
     </div>
-    <el-tooltip class="item" effect="dark" content="Top Left 提示文字" placement="top-start" :offset="20">
+    <el-tooltip class="item" effect="dark" content="Top Left 提示文字" placement="top-start">
       <el-button>上左</el-button>
     </el-tooltip>
   </div>
@@ -65,6 +69,10 @@ body {
   height: 200px;
   background: lightblue;
   margin-top: 300px;
+}
+
+.tip-popper-class {
+  max-width: 600px;
 }
 </style>
 

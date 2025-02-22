@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import MultipleSelect from './components/MultipleSelect.vue'
+import MultipleSelect from './components/MultipleSelectV2.vue'
 import CustomMultipleSelect from './components/CustomMultipleSelect.vue'
 import SelectTree from './components/SelectTree.vue'
 export default {

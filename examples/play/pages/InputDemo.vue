@@ -58,5 +58,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.el-input-group__append {
+  line-height: normal;
+}
 </style>
