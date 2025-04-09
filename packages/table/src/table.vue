@@ -81,7 +81,7 @@
         }">
       </table-footer>
     </div>
-    <!-- 左边filxed -->
+    <!-- 左边固定列fixed -->
     <div
       v-if="fixedColumns.length > 0"
       v-mousewheel="handleFixedMousewheel"
@@ -143,7 +143,7 @@
           }"></table-footer>
       </div>
     </div>
-    <!-- 右边fixed -->
+    <!-- 右边固定列fixed -->
     <div
       v-if="rightFixedColumns.length > 0"
       v-mousewheel="handleFixedMousewheel"

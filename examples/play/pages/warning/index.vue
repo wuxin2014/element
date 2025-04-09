@@ -7,46 +7,110 @@
           <el-radio label="N">方式2</el-radio>
         </el-radio-group>  
       </el-form-item>
-      <el-form-item label="预警异常：">
-        <el-button type="primary" @click="handeleAdd">新增</el-button>
-      </el-form-item>
-      <div v-if="targetList.length > 0">
-        <el-button type="primary" @click="handeleModify">修改</el-button>
-        <el-button type="primary" @click="handeleDelete">删除</el-button>
+      <div v-if="form.value1 === 'Y'">
+        <div
+          v-for="(item, index) in form.wrnng_rto_list"
+          :key="item.uuid"
+          style="display: flex;">
+          <el-form-item
+            label="交易所:"
+            label-width="78px"
+            :prop="'wrnng_rto_list.' + index + ' .wrnng_exchng_cd'"
+            :rules="[{ type: 'array',required: true, message: '请选择交易所', trigger: 'change'}]"
+            style="margin-right:14px">
+            <!-- 交易所支持多选+全选 -->
+            <multiple-select
+              v-model="item.wrnng_exchng_cd"
+              :option-list="exchangeList"
+              :field="{label: 'wrnng_exchng_nm', value:'wrnng_exchng_cd'}"
+              :disabled="isDetail"
+              placeholder="请选择交易所"
+              style="width:160px"
+              @change="(checkedList, clickItem) => handleExchangeChange(item, index, clickItem)">
+            </multiple-select>
+          </el-form-item>
+          <el-form-item
+            label="比例预警:"
+            :prop="'wrnng_rto_list.' + index + '.rtoList'"
+            :rules="{ required: true, validator: wrnngRtoListRules, trigger: 'change'}"
+            label-width="98px">
+            <div
+              style="display: flex"
+              class="rtoList">
+              <el-form-item
+                v-for="(rtoItem, idx) in item.rtoList"
+                :key="idx"
+                :prop="'wrnng_rto_list.'+ index + '.rtoList.'+ idx + '.value'"
+                :rules="{ validator: wrnngRtoRules, payload: { list: item.rtoList,curIndex: idx }, trigger: 'blur'}"
+                label-width="0px"
+                style="margin-right: 10px">
+                <el-input
+                  v-model="rtoItem.value"
+                  :disabled="isDetail ||item.wrnng_exchng_cd.length === 0"
+                  placeholder="请输入比例"
+                  style="width: 200px">
+                  <template slot="append">%</template>
+                </el-input>
+              </el-form-item>
+            </div>
+          </el-form-item>
+          <el-form-item label-width="0px">
+            <div class="rto-opt-btn-wrap">
+              <i v-if="showRtoAddBtn"
+                class="el-icon-circle-plus-outline"
+                @click="handleAddRto">
+              </i>
+              <i class="el-icon-remove-outline"
+                v-if="index !== 0 && form.wrnng_rto_list.length > 1 && !isDetail"
+                style="margin-left: 10px"
+                @click="handleRemoveRto(item.uuid)">
+              </i>
+            </div>
+          </el-form-item>
+        </div>
       </div>
-      <el-row v-for="item in targetList" :key="item.exchange_code" class="list-wrap">
-        <el-col>
-          <el-row v-for="vItem in item.list" :key="vItem.variety_code" class="list-item">
-            <el-form-item label="" label-width="0px">
-              <el-checkbox v-model="vItem.checked"></el-checkbox>
-            </el-form-item>
-            <el-col :span="6">
-              <el-form-item label="交易所：" label-width="82px">
-                <div class="text-ele">{{ item.exchange_name }}</div>
+      <div v-else="form.value1 === 'N'">
+        <el-form-item label="预警异常：">
+          <el-button type="primary" @click="handeleAdd">新增</el-button>
+        </el-form-item>
+        <div v-if="targetList.length > 0">
+          <el-button type="primary" @click="handeleModify">修改</el-button>
+          <el-button type="primary" @click="handeleDelete">删除</el-button>
+        </div>
+        <el-row v-for="item in targetList" :key="item.exchange_code" class="list-wrap">
+          <el-col>
+            <el-row v-for="vItem in item.list" :key="vItem.variety_code" class="list-item">
+              <el-form-item label="" label-width="0px">
+                <el-checkbox v-model="vItem.checked"></el-checkbox>
               </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="品种：" label-width="82px">
-                <div class="text-ele">{{ vItem.variety_name }}</div>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-row v-for="(instItem, index) in vItem.list" :key="index" :gutter="24">
-                <el-col :span="12">
-                  <el-form-item :label="`合约${vItem.list.length === 1 ? '' : index + 1}:`" label-width="82px">
-                    <div class="text-ele">{{ instItem.inst_id.join('\\') }}</div>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item :label="`预警值${vItem.list.length === 1  ? '' : index + 1}:`" label-width="82px">
-                    <div class="text-ele">{{ instItem.warningVal }}</div>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
+              <el-col :span="6">
+                <el-form-item label="交易所：" label-width="82px">
+                  <div class="text-ele">{{ item.exchange_name }}</div>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="品种：" label-width="82px">
+                  <div class="text-ele">{{ vItem.variety_name }}</div>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-row v-for="(instItem, index) in vItem.list" :key="index" :gutter="24">
+                  <el-col :span="12">
+                    <el-form-item :label="`合约${vItem.list.length === 1 ? '' : index + 1}:`" label-width="82px">
+                      <div class="text-ele">{{ instItem.inst_id.join('\\') }}</div>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item :label="`预警值${vItem.list.length === 1  ? '' : index + 1}:`" label-width="82px">
+                      <div class="text-ele">{{ instItem.warningVal }}</div>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </div>
     </el-form>
     <AddModal
       :visible="isShow"
@@ -59,13 +123,16 @@
 </template>
 
 <script>
-import AddModal from './AddModal.vue'
+import AddModal from './components/AddModal.vue'
+import MultipleSelect from './components/MultipleSelect.vue'
+let rtoUuid = 1
 export default {
-  components: { AddModal },
+  components: { AddModal, MultipleSelect },
   data() {
     return {
       form: {
-        value1: ''
+        value1: '',
+        wrnng_rto_list: [{ uuid:rtoUuid, wrnng_exchng_cd:[], rtoList: [{ value: '' },{ value: '' },{ value: '' }]}],
       },
       rules: {},
       isShow: false,
@@ -92,7 +159,74 @@ export default {
       editItem: null
     }
   },
+  computed: {
+    showRtoAddBtn() {
+      return true
+    }
+  },
   methods: {
+    wrnngRtoListRules(rule, value, callback) {
+      // console.log('value=-=', value)
+      if (value.every(item => !item.value)) {
+        callback(new Error('请至少输入一个预警值'))
+      } else {
+        callback()
+      }
+    },
+    wrnngRtoRules(rule, value, callback) {
+      if (rule.field) {
+        const filed = rule.field.substring(0,rule.field.index0f('.rtoList'))
+        this.$refs.formRef.validateField(`${filed}.rtoList`)
+      }
+      if (!value) {
+        return callback()
+      }
+      const regex = /^[1-9]\d*$/
+      if (!regex.test(value) || Number(value) === 0 || Number(value) > 100) {
+        callback(new Error('请输入1-100的整数'))
+      } else {
+        const { list, curIndex } = rule.payload
+        if (curIndex > 0) {
+          // 填写完校验是不是比前一个框大
+          const prevValue = list[curIndex - 1].value
+          if (!prevValue || Number(value) <= Number(prevValue)) {
+            this.$Message.error('请按由小到大的顺序从左到右依次填写预警值。')
+            list[curIndex].value = ''
+          }
+        }
+        callback()
+      }
+    },
+    handleAddRto() {
+      rtoUuid++;
+      this.form.wrnng_rto_list.push({
+        uuid: rtoUuid,
+        wrnng_exchng_cd:[],
+        rtoList: [{ value: '' }, { value: ''}, { value: '' }]
+      });
+    },
+    handleRemoveRto(uid) {
+      this.form.wrnng_rto_list = this.form.wrnng_rto_list.filter(item => item.uuid !== uid)
+    },
+    handleExchangeChange(curItem, index, clickItem) {
+      console.log('==handleExchangeChange===', curItem, index, clickItem)
+      this.$refs.formRef.validateField(`wrnng_rto_list.${index}.wrnng_exchng_cd`)
+      const isRepeat = this.form.wrnng_rto_list.filter(item => item.uuid !== curItem.uuid).some(item => {
+        let flag = false
+        for (let key of curItem.wrnng_exchng_cd) {
+          if (item.wrnng_exchng_cd.includes(key)) {
+            flag = true
+            break
+          }
+			  }
+        return flag
+      })
+      if (isRepeat) {
+        curItem.wrnng_exchng_cd = curItem.wrnng_exchng_cd.filter(v => clickItem && clickItem.value !== v)
+        this.$Message.error('您已设置过当前交易所限额，请重新勾选')
+        return
+      }
+    },
     handeleAdd() {
       this.editItem = null
       this.modalType = 'create'
@@ -175,7 +309,6 @@ export default {
       newList.forEach(item => {
         item.list.sort((a, b) => a.inst_id[0] > b.inst_id[0] ? 1 : -1)
       })
-
       // 分组
       const tList = []
       newList.forEach(item => {
@@ -240,6 +373,14 @@ export default {
   background-color: #F5F7FA;
   border: 1px solid #E4E7ED; // #DCDFE6
   color: #C0C4CC; // #606266
+  cursor: pointer;
+}
+
+.rto-opt-btn-wrap {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  color: red;
   cursor: pointer;
 }
 

@@ -4,22 +4,24 @@
       ref="selectRef"
       :value="selected"
       multiple
+      collapse-tags
+      @remove-tag="handleRemoveTag"
       @visible-change="visibleSelect">
-      <el-option value="all" label="全部" class="multiple">
-        <el-checkbox v-model="optionsAll" @change="handleoptionsAllChange">
+      <el-option value="all" label="全部">
+        <el-checkbox v-model="optionsAll" @change="handleOptionAllChange">
           全部
         </el-checkbox>
       </el-option>
       <el-option
-        class="multiple"
         v-for="(item) in optionsData"
         :value="item[field.value]"
         :label="item[field.label]"
         :key="item[field.value]"
+        :class="{selected: optionsAll || selectedOptions.includes(item[field.value])}"
       >
         <el-checkbox
           :value="item.check"
-          @change="handleTaskItemChange(item)">
+          @change="(checked) => handleOptionItemChange(checked, item)">
           {{ item[field.label] }}
         </el-checkbox>
       </el-option>
@@ -33,11 +35,11 @@ export default {
   props: {
     value: {
       type: Array,
-      default: []
+      default: () => []
     },
     optionList: {
       type: Array,
-      default: []
+      default: () => []
     },
     field: {
       type: Object,
@@ -50,7 +52,7 @@ export default {
   },
   data() {
     return {
-      optionsData: {},
+      optionsData: [],
       optionsAll: true,
       selectedOptions: [],
     }
@@ -85,49 +87,48 @@ export default {
         this.$refs.selectRef.blur();
       }
     },
-    handleoptionsAllChange(isAll) {
+    handleOptionAllChange(isAll) {
       if (isAll) {
-        this.optionsData.forEach((elm, idx) => {
+        this.optionsData.forEach((elm) => {
           elm.check = true
           this.selectedOptions.push(elm[this.field.value])
         })
       } else {
-        this.optionsData.forEach((elm, idx) => {
+        this.optionsData.forEach((elm) => {
           elm.check = false
         })
         this.selectedOptions = []
       }
       this.$emit('input',this.selectedOptions)
     },
-    handleTaskItemChange(item) {
+    handleOptionItemChange(checked, item) {
       console.log(item)
-      // 这里是取出下标的方法，可以封装写出去
-      Array.prototype.getArrayIndex = function (obj) {
-        for (var i = 0; i < this.length; i++) {
-          if (this[i] === obj) {
-            return i
-          }
-        }
-        return -1
-      }
-      if (!item.check) {
-        this.optionsData.forEach((elm, idx) => {
-          if (item.value == elm.value) {
-            let index = this.selectedOptions.getArrayIndex(item.value)
-            this.selectedOptions.splice(index, 1)
-          }
-        })
+      item.check = checked
+      if (!checked) {
+        this.selectedOptions = this.selectedOptions.filter(v => v !== item[this.field.value])
       } else {
-        this.optionsData.forEach((elm, idx) => {
-          if (item.value == elm.value) {
-            this.selectedOptions.push(elm.value)
-          }
-        })
+        this.selectedOptions.push(item[this.field.value])
       }
-      // this.selectedOptions = this.optionsData.filter(v => v.check).map(v => v[this.field.value])
       this.optionsAll = this.selectedOptions.length === this.optionsData.length
       this.$emit('input', this.selectedOptions)
-    }
+    },
+    handleRemoveTag(val) {
+      console.log(val)
+      if (val === 'all') {
+        this.selectedOptions = [];
+        this.optionsData.forEach((elm) => {
+          elm.check = false
+        })
+      } else {
+        this.selectedOptions = this.selectedOptions.filter(v => v !== val)
+        this.optionsData.forEach((elm) => {
+          if (elm[this.field.value] === val) {
+            elm.check = false
+          }
+        })
+      }
+      this.$emit('input', this.selectedOptions);
+    },
   }
 }
 </script>
@@ -143,13 +144,15 @@ export default {
       margin-left: 20px;
     }
   }
+  
   .el-select-dropdown__item {
     padding: 0;
   }
-  .el-tag__close,
-  .el-icon-close {
+
+  ::v-deep .el-select .el-tag__close.el-icon-close {
     display: none;
   }
+
   .el-tag.el-tag--info {
     background: transparent;
     border: 0;
