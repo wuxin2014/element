@@ -1,7 +1,8 @@
 <template>
   <div style="height: 1000px">
+    <p>弹窗自定义滚动条问题</p>
     <el-button @click="isShow=true">弹窗自定义滚动条问题</el-button>
-    <el-dialog title="收货地址" :visible.sync="isShow">
+    <el-dialog title="收货地址" :visible.sync="isShow" v-draggable>
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="活动名称">
           <el-input v-model="form.name"></el-input>
@@ -77,6 +78,8 @@
 </template>
 
 <script>
+// import elDragDialog from "../directive/el-drag-dialog";
+import draggable from '../directive/drag'
 export default {
   data() {
     return {
@@ -89,6 +92,10 @@ export default {
       },
       options: []
     }
+  },
+  directives: {
+    // elDragDialog,
+    draggable,
   },
   methods: {
     onSubmit() {}
