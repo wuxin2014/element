@@ -42,14 +42,18 @@ export default {
           this.leftVal = arr[0]
           this.rightVal = arr[1]
         }
-        else {
-          this.leftVal = ''
-          this.rightVal = ''
-        }
+      } else {
+        this.leftVal = ''
+        this.rightVal = ''
       }
     },
     handleBlur(field) {
       if (!this[field]) {
+        if (!this.leftVal && !this.rightVal) {
+          this.$emit('input','')
+        } else {
+          this.$emit('input',`${this.leftVal}-${this.rightVal}`)
+        }
         return
       }
       // 需要为正数
@@ -70,9 +74,8 @@ export default {
         this.$message.error('小数位最多保留4位小数')
         return
       }
-      this[field] = Number(this.field).toFixed(4)
       if (this.leftVal && this.rightVal) {
-        if (this.leftVal >= this.rightVal) {
+        if (Number(this.leftVal) >= Number(this.rightVal)) {
           this[field] = ''
           this.$message.error('开始升贴水应该小于结束升贴水')
           return

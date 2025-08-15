@@ -12,12 +12,15 @@
       </div>
       <el-row :gutter="48">
         <el-col :span="8">
-          <el-form-item label="交割类型" :prop="'list.' + index + '.delivery_type'"
-            :rules="{ required: true, message: '请选择交割类型', trigger: 'change' }">
+          <el-form-item
+            label="交割类型"
+            :prop="'list.' + index + '.delivery_type'"
+            :rules="{ required: true, message: '请选择交割类型', trigger: 'change' }"
+          >
             <el-select v-model="fItem.delivery_type" :disabled="isDetail || delivery0fVehicleAndShipPlates === 'N'"
               :popper-append-to-body="false" popper-class="custom_poper_class" style="width: 100%"
               @change="handleDeliveryTypeChange(fItem)">
-              <el-option v-for="item in deliveryTypeList" :key="item.code" :label="item.text" :value="item.code">
+              <el-option v-for="item in deliveryTypeList" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
@@ -26,17 +29,21 @@
       <el-row :gutter="48">
         <el-col v-for="colItem in fItem.formItems" :key="colItem.prop" :span="8">
           <el-form-item :label="colItem.label" :prop="colItem.prop">
-            <span slot="label" v-if="colItem.type === 'spread-input'">
-              {{ colItem.label }}
-              <span style="color: red; font-size: 12px">(请填写闭区间)</span>
-            </span>
+            <div slot="label">
+              <span>{{ colItem.label }}</span>
+              <span v-if="colItem.type === 'spread-input'" style="color: red; font-size: 12px">(请填写闭区间)</span>
+            </div>
             <el-select v-if="colItem.type === 'select'" v-model="fItem[colItem.prop]"
               :multiple="colItem.multiple || false" :disabled="isDetail" :popper-append-to-body="false"
               popper-class="custom_poper_class" style="width:100%">
-              <el-option v-for="item in dynamicOptions[colItem.prop]" :key="item" :label="item" :value="item">
+              <el-option v-for="item in dynamicOptions[colItem.prop]" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
-            <spread-input v-else-if="colItem.type === 'spread-input'" v-model="fItem[colItem.prop]" :disabled="isDetail"
+            <spread-input
+              v-else-if="colItem.type === 'spread-input'"
+              :value="fItem[colItem.prop]"
+              @input="(val) => handleSpreadChange(fItem, index, colItem.prop, val)"
+              :disabled="isDetail"
               style="width: 100%">
             </spread-input>
             <el-input v-else-if="colItem.type === 'input'" v-model="fItem[colItem.prop]" :disabled="isDetail"
@@ -51,6 +58,7 @@
 
 <script>
 import SpreadInput from './SpreadInput.vue'
+import { DELIVERY_TYPE } from '../../util'
 let uuid = 1
 export default {
   props: {
@@ -75,14 +83,14 @@ export default {
       form: {
         list: [],
       },
-      deliveryTypeList: [
-        { text: '标准仓单', code: 'A' },
-        { text: '车(船)板', code: 'C' }
-      ],
+      deliveryTypeList: DELIVERY_TYPE,
       dynamicOptions: {
         store_house: [],
-        tax: ['保税', '完税'],
-        vehicle_ship_plate: []
+        vehicle_ship_plate: [],
+        tax: [
+          { label:'保税', value: '1' },
+          { label:'完税', value: '2' }
+        ],
       }
     }
   },
@@ -93,7 +101,23 @@ export default {
     },
   },
   mounted() {
-    this.handleAdd()
+    if (this.$route.query.missionCode) {
+      // eslint-disable-next-line no-unused-vars
+      const { remarks, ...rest } = this.$parent.$parent.getFormDetailInfo()
+      this.form = { ...this.form, ...rest }
+      this.form.list = (rest.list || []).map((item) => {
+        const newItem = {
+          ...item,
+          uuid:`uuid-${++uuid}`,
+          formItems: []
+        }
+        this.handleDeliveryTypeChange(newItem)
+        return newItem
+      })
+    }
+    if (this.form.list.length === 0) {
+      this.handleAdd()
+    }
   },
   methods: {
     handleDeliveryTypeChange(fItem) {
@@ -231,6 +255,10 @@ export default {
         this.$set(fItem, item.prop, value)
       })
       fItem.formItems = formItems
+    },
+    handleSpreadChange(record, index, propName, val) {
+      record[propName] = val
+      this.$refs.formRef.validateField('list.' + index + '.' + propName)
     },
     handleAdd() {
       if (this.form.list.length >= 3) {

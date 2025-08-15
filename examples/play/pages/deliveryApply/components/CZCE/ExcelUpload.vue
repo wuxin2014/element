@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input ref="fileInput" type="file" hidden accept=".xls,.xlsx" @change="handleFileChange" />
+    <input ref="fileInput" type="file" style="display:none" accept=".xls,.xlsx" @change="handleFileChange" />
     <el-button :size="size" :loading="importLoading" @click="handleFileUpload">
       <i class="el-icon-upload"></i>
       附件上传
