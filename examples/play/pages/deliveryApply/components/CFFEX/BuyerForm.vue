@@ -1,14 +1,15 @@
 <template>
   <div class="form-container">
-    <div class="columnTitle">卖方仓单信息</div>
-    <div>您可以通过本页面直接填写或者上传固定模板附件<span class="template-download-text" @click="handleDownloadTemplate">【模板下载]</span>进行批量导入
-    </div>
+    <div class="columnTitle">买方意向信息</div>
     <div style="display: flex; padding:10px 0">
-      <el-button v-if="!isDetail" size="mini" icon="el-icon-plus" @click="handleAdd"></el-button>
-      <ExcelUpload v-if="!isDetail" businessType="DELIV_APPLY_GFEX" style="margin:010px" @success="handleImportData"></ExcelUpload>
-      <el-button type="primary" size="mini" :loading="exportLoading" @click="handleExport">导出</el-button>
+      <el-button v-if="!isDetail" size="mini" @click="handleAdd">添加</el-button>
     </div>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="top">
+    <el-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      size="small"
+      label-position="top">
       <div style="padding-bottom: 16px">
         <el-table
           border
@@ -25,28 +26,24 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="warehouseNumber"
-            label="仓单编号"
+            prop="transactionTypeCode"
+            label="交易类型编码"
             align="center">
             <template slot-scope="scope">
               <el-form-item
-                :prop="'sellerDeliveryInformations.'+ scope.$index + '.warehouseNumber'"
-                :rules="{ required: true, validator:validateWhRcpNo, record:scope.row, trigger: ['blur', 'change'] }"
-              >
-                <el-input v-model="scope.row.warehouseNumber" :disabled="isDetail" placeholder="请输入" style="width: 100%" />
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="warehouse"
-            label="仓库/分库"
-            align="center">
-            <template slot-scope="scope">
-              <el-form-item
-                :prop="'sellerDeliveryInformations.'+ scope.$index + '.warehouse'"
-                :rules="{ required: true, validator:validateWarehouse, record:scope.row, trigger: ['blur', 'change'] }"
-              >
-                <el-input v-model="scope.row.warehouse" :disabled="isDetail" placeholder="请输入" style="width: 100%" />
+                :prop="'buyerDeliveryInformations.'+ scope.$index + '.transactionTypeCode'"
+                :rules="{ required: true, validator:validateTransactionTypeCode, record:scope.row, trigger: ['blur', 'change'] }">
+                <el-select
+                  v-model="scope.row.transactionTypeCode"
+                  :disabled="isDetail"
+                  style="width: 100%">
+                  <el-option
+                    v-for="item in transactionTypeList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </template>
           </el-table-column>
@@ -56,43 +53,49 @@
             align="center">
             <template slot-scope="scope">
               <el-form-item
-                :prop="'sellerDeliveryInformations.'+ scope.$index + '.numberOfHands'"
-                :rules="{ required: true, validator:validateNumberOfHands, record:scope.row, trigger: ['blur', 'change'] }"
-              >
-                <el-input v-model="scope.row.numberOfHands" :disabled="isDetail" placeholder="请输入" style="width: 100%" />
+                :prop="'buyerDeliveryInformations.'+ scope.$index + '.numberOfHands'"
+                :rules="{ required: true, validator:validateNumberOfHands, record:scope.row, trigger: ['blur', 'change'] }">
+                <el-input
+                  v-model="scope.row.numberOfHands"
+                  :disabled="isDetail"
+                  placeholder="请输入"
+                  style="width: 100%" />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="numberOfSheets" label="数量(张)" align="center">
+          <el-table-column
+            prop="numberOfSheets"
+            label="数量(张)"
+            align="center">
           </el-table-column>
-          <el-table-column v-if="!isDetail" prop="opt" label="操作" width="120px" align="center">
+          <el-table-column
+            v-if="!isDetail"
+            prop="opt"
+            label="操作"
+            width="120px"
+            align="center">
             <template slot-scope="{row}">
               <el-button type="text" @click="handleDel(row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
         <!-- 超过10条则分页展示 -->
-        <div v-if="form.sellerDeliveryInformations.length > 10" class="pagination-wrap">
+        <div
+          v-if="form.buyerDeliveryInformations.length > 10"
+          class="pagination-wrap">
           <el-pagination
             background layout="total, sizes, prev, pager, next, jumper"
             :current-page="pageNum"
             :page-size="pageSize"
             :page-sizes="pageSizeList"
-            :total="form.sellerDeliveryInformations.length"
+            :total="form.buyerDeliveryInformations.length"
             @current-change="handlePageNumChange"
             @size-change="handleSizeChange">
           </el-pagination>
         </div>
       </div>
       <el-row :gutter="48">
-        <el-col :span="9">
-          <el-form-item label="标准重量" prop="standardWeight">
-            <el-input v-model="form.standardWeight" disabled>
-              <template slot="append">{{ varietyTbInfo.weight_unit }}</template>
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="9">
+        <el-col :span="8">
           <el-form-item prop="payment">
             <span slot="label">估算货款<span style="color: red; font-size:12px">(按标准重量及交割月合约最新结算价计算)</span></span>
             <el-input v-model="form.payment" disabled>
@@ -106,7 +109,6 @@
 </template>
 
 <script>
-import ExcelUpload from '../ExcelUpload.vue'
 let uuid = 1
 export default {
   props: {
@@ -127,17 +129,13 @@ export default {
       default: () => ({})
     }
   },
-  components: {
-    ExcelUpload
-  },
   data() {
     return {
       form: {
-        sellerDeliveryInformations: [
+        buyerDeliveryInformations: [
           {
             uuid: `uuid-${uuid}`,
-            warehouseNumber: '',
-            warehouse: '',
+            transactionTypeCode: '',
             numberOfHands: '',
             numberOfSheets: ''
           }
@@ -147,22 +145,20 @@ export default {
         deliveryQuantity: '',
       },
       rules: {
-        sellerDeliveryInformations: { required: true, message: '请计算标准重量', trigger: 'change' },
         standardWeight: { required: true, message: '请计算标准重量', trigger: 'change' },
         payment: { required: true, message: '请计算估算货款', trigger: 'change' },
-        field3: { required: true, message: '请选择', trigger: 'change' },
       },
       pageNum: 1,
       pageSize: 10,
       pageSizeList: [10, 20, 50, 100],
-      exportLoading: false
+      transactionTypeList: []
     }
   },
   computed: {
     renderList() {
       const startIndex = (this.pageNum - 1) * this.pageSize;
       const endIndex = this.pageNum * this.pageSize;
-      return this.form.sellerDeliveryInformations.slice(startIndex, endIndex);
+      return this.form.buyerDeliveryInformations.slice(startIndex, endIndex);
     },
     deliveryUnitHand() {
       return this.varietyTbInfo.delivery_unit_hand
@@ -181,27 +177,17 @@ export default {
     if (this.$route.query.missionCode) {
       // eslint-disable-next-line no-unused-vars
       const { remarks,...rest } = this.$parent.$parent.getFormDetailInfo() || {}
-      this.form = { ...this.form, ...rest }
-      if (rest.sellerDeliveryInformations && rest.sellerDeliveryInformations.length > 0) {
-        this.form.sellerDeliveryInformations = rest.sellerDeliveryInformations.map(item => ({ ...item, uuid:`uuid-${++uuid}`}))
+      this.form = { ...this.form,...rest}
+      if (rest.buyerDeliveryInformations &&rest.buyerDeliveryInformations.length > 0) {
+        this.form.buyerDeliveryInformations = rest.buyerDeliveryInformations.map(item => ({ ...item, uuid:`uuid-${++uuid}`}))
       }
     }
   },
   methods: {
-    validateWhRcpNo(rule, value, callback) {
-      value = rule.record.warehouseNumber
-      // 对应品种代码(大小写均可)+14位数字
-      // const regex = new RegExp('^' + this.deliveryVariety + '[0-9]{14}$','gi')
+    validateTransactionTypeCode(rule, value, callback) {
+      value = rule.record.transactionTypeCode
       if (!value) {
-        callback(new Error('请输入仓单编号'))
-      } else {
-        callback()
-      }
-    },
-    validateWarehouse(rule, value, callback) {
-      value = rule.record.warehouse
-      if (!value) {
-        callback(new Error('请输入仓库/分库'))
+        callback(new Error('请选择'))
       } else {
         callback()
       }
@@ -223,65 +209,21 @@ export default {
         callback()
       }
     },
-    handleDownloadTemplate() {
-      // todo
-    },
-    handleImportData(result) {
-      result = result.map(item => {
-        return {
-          ...item,
-          warehouseNumber: item.warehouseNumber || '',
-          warehouse: item.warehouse || '',
-          numberOfHands: item.numberOfHands || '',
-          numberOfSheets: item.numberOfHands ? item.numberOfHands / this.deliveryUnitHand : '',
-          uuid: `uuid-${++uuid}`,
-        }
-      })
-      // TODO 容易犯错的地方, 正则不能提出循环外,否则会出问题
-      for (const item of result) {
-        const whRegex = new RegExp('^' + this.deliveryVariety + '[0-9]{14}$','gi')
-        if (item.warehouseNumber && !whRegex.test(item.warehouseNumber)) {
-          return this.$message.error('请输入正确仓单号。')
-        }
-        if (item.numberOfHands && (item.numberOfHands % this.deliveryUnitHand !== 0)) {
-          return this.$message.error(`请输入交割单位:${this.deliveryUnitHand}的整数倍。`)
-        }
-      }
-
-      if (this.form.sellerDeliveryInformations.length > 0) {
-        // 校验通过则判断当前是否已有添加行,若有则弹框提示“请选择追加或覆盖表格内已有数据。
-        this.$messageBox.confirm('请选择追加或覆盖表格内已有数据。', '提示', {
-          confirmButtonText: '覆盖',
-          cancelButtonText: '追加',
-          customClass: 'online-web-confirm-box',
-          confirmButtonClass: 'space-margin-left',
-          closeOnClickModal: false,
-          closeOnPressEscape: false
-        }).then(() => {
-          this.form.sellerDeliveryInformations = result
-        }).catch(() => {
-          this.form.sellerDeliveryInformations.push(...result)
-        })
-      } else {
-        this.form.sellerDeliveryInformations = result
-      }
-    },
     handleAdd() {
-      this.form.sellerDeliveryInformations.push({
+      this.form.buyerDeliveryInformations.push({
         uuid: `uuid-${++uuid}`,
-        warehouseNumber: '',
-        warehouse: '',
+        transactionTypeCode: '',
         numberOfHands: '',
         numberOfSheets: ''
       })
     },
     handleDel(record) {
-      if (this.form.sellerDeliveryInformations.length === 1) {
+      if (this.form.buyerDeliveryInformations.length === 1) {
         this.$message.error('至少上传一条数据')
         return
       }
-      this.form.sellerDeliveryInformations = this.form.sellerDeliveryInformations.filter(v => v.uuid !== record.uuid)
-      if (this.form.sellerDeliveryInformations.length % this.pageSize === 0 && this.pageNum >1) {
+      this.form.buyerDeliveryInformations = this.form.buyerDeliveryInformations.filter(v => v.uuid !== record.uuid)
+      if (this.form.buyerDeliveryInformations.length % this.pageSize === 0 && this.pageNum > 1) {
         this.pageNum -= 1
       }
     },
@@ -300,7 +242,7 @@ export default {
           sums[index] = '总计'
           return
         }
-        if (['warehouseNumber', 'warehouse'].includes(column.property)) {
+        if (['transactionTypeCode'].includes(column.property)) {
           sums[index] = '--/--'
           return
         }
@@ -308,8 +250,8 @@ export default {
           sums[index] = ''
           return
         }
-        if (this.form.sellerDeliveryInformations.length) {
-          sums[index] = this.form.sellerDeliveryInformations.reduce((prev, curr) => {
+        if (this.form.buyerDeliveryInformations.length) {
+          sums[index] = this.form.buyerDeliveryInformations.reduce((prev, curr) => {
             const value = curr[column.property] ? Number(delcommafy(curr[column.property])) : ''
             if (!isNaN(value)) {
               return bigNumberAdd(prev, delcommafy(curr[column.property]))
@@ -324,7 +266,7 @@ export default {
       })
       sums.forEach((item,index) => {
         if (item && !isNaN(item)) {
-          if (index === 4 && !this.isDetail) {
+          if (index === 3 && !this.isDetail) {
             // 标准重量=交割单位(数量)*张数
             this.form.standardWeight = this.deliveryUnitAmount * sums[index]
             // 估算货款=标准重量*交割月合约最新结算价
@@ -333,7 +275,7 @@ export default {
           }
           sums[index] = commafy(sums[index]) // 千位符展示
         } else {
-          if (index === 4 && !this.isDetail) {
+          if (index === 3 && !this.isDetail) {
             this.form.standardWeight = ''
             this.form.payment = ''
             this.form.deliveryQuantity = ''
@@ -352,11 +294,11 @@ export default {
       return new Promise((resolve) => {
         this.$refs.formRef.validate((valid) => {
           if (valid) {
-            if (this.form.sellerDeliveryInformations.some(item => !item.warehouseNumber || !item.numberOfHands || !item.warehouse)) {
+            if (this.form.buyerDeliveryInformations.some(item => !item.transactionTypeCode || !item.numberOfHands)) {
               this.$message.error('请完整填写申请表格内容。')
               return
             }
-            if (hasDuplicateField(this.form.sellerDeliveryInformations, 'warehouseNumber')) {
+            if (hasDuplicateField(this.form.buyerDeliveryInformations, 'transactionTypeCode')) {
               this.$message.error('表格内容有重复，请确认调整后重新录入。')
               return
             }

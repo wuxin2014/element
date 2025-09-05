@@ -34,18 +34,26 @@
             </el-input>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row v-if="isOptionalIntentionWarehouse" :gutter="48">
         <el-col :span="8">
           <el-form-item
-            label="投保标志"
-            prop="signs0fSpeculation">
-            <el-radio-group
-              v-model="form.signsOfSpeculation"
-              :disabled="isDetail">
-              <el-radio
-                v-for="item in signsOfSpeculationList"
-                :key="item.value"
-                :label="item.value">{{ item.label }}</el-radio>
-            </el-radio-group>
+            label="第一意向仓库/分库"
+            prop="oneWarehouse">
+            <el-input
+              v-model="form.oneWarehouse"
+              placeholder="请输入"
+              style="width: 100%" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item
+            label="第二意向仓库/分库"
+            prop="twoWarehouse">
+            <el-input
+              v-model="form.twoWarehouse"
+              placeholder="请输入"
+              style="width: 100%" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -55,7 +63,6 @@
 
 <script>
 import { mixins } from '../../util/mixins'
-import { DELIVERY_INSURE_FLAG } from '../..util'
 export default {
   mixins: [mixins],
   data() {
@@ -65,25 +72,36 @@ export default {
         numberOfSheets: '',
         standardWeight: '',
         payment: '',
-        signsOfSpeculation: '',
+        oneWarehouse: '',
+        twoWarehouse: '',
       },
       rules: {
         deliveryQuantity: { required: true, message: '请输入交割数量', trigger: 'blur' },
         standardWeight: { required: true, message: '请先输入交割数量', trigger: 'change' },
         payment: { required: true, message: '请先输入交割数量', trigger: 'change' },
-        signsOfSpeculation: { required: true, message: '请选择投保标志', trigger: 'change' },
       },
-      signsOfSpeculationList: DELIVERY_INSURE_FLAG
+    }
+  },
+  computed: {
+    // 可选择意向库
+    isOptionalIntentionWarehouse() {
+      return this.varietyTbInfo.optional_intention_warehouse === 'Y'
     }
   },
   mounted() {
     if (this.$route.query.missionCode) {
       // eslint-disable-next-line no-unused-vars
       const { remarks,...rest } = this.$parent.$parent.getFormDetailInfo() || {}
-      this.form = { ...this.form, ...rest }
+      this.form = { ...this.form,...rest}
     }
   },
   methods: {
+    handleCompare(curField, compareField) {
+      if (this.form[curField] && this.form[compareField] && this.form[curField] === this.form[compareField]) {
+        this.form[curField] = ''
+        this .$Message.error('已存在该意向仓库/分库，请重新填写')
+      }
+    },
     getFormData() {
       return { ...this.form }
     },

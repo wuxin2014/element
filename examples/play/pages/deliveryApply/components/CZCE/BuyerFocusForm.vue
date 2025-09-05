@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import SpreadInput from './SpreadInput.vue'
+import SpreadInput from '../SpreadInput.vue'
 import { DELIVERY_TYPE } from '../../util'
 let uuid = 1
 export default {

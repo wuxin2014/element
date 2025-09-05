@@ -34,28 +34,54 @@
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item
-            label="投保标志"
-            prop="signs0fSpeculation">
-            <el-radio-group
-              v-model="form.signsOfSpeculation"
-              :disabled="isDetail">
-              <el-radio
-                v-for="item in signsOfSpeculationList"
-                :key="item.value"
-                :label="item.value">{{ item.label }}</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
       </el-row>
+      <div
+        v-for="(vItem, index) in form.nonuniversals"
+        :key="vItem.id">
+        <div class="columnTitle">{{ index === 0 ? '第一意向' : '第二意向' }}</div>
+        <el-row :gutter="48">
+          <el-col :span="8">
+            <el-form-item
+              label="交割类型"
+              :prop="'nonuniversals.' + index + '.deliveryType'"
+              :rules="{ required: index === 0, message: '请选择交割类型', trigger: 'change'}">
+              <el-select
+                v-model="vItem.deliveryType"
+                :disabled="isDetail"
+                :popper-append-to-body="false"
+                popper-class="custom_poper_class"
+                style="width: 100%">
+                <el-option
+                  v-for="item in deliveryTypeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col
+            v-if="isOptionalIntentionWarehouse"
+            :span="8">
+            <el-form-item
+              label="交割库/车板场所"
+              :prop="'nonuniversals.' + index + '.deliveryWarehouse'">
+              <el-input
+                v-model="vItem.deliveryWarehouse"
+                :disabled="isDetail"
+                style="width: 100%">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
 import { mixins } from '../../util/mixins'
-import { DELIVERY_INSURE_FLAG } from '../..util'
+import { DELIVERY_TYPE } from '../../util'
 export default {
   mixins: [mixins],
   data() {
@@ -65,22 +91,34 @@ export default {
         numberOfSheets: '',
         standardWeight: '',
         payment: '',
-        signsOfSpeculation: '',
+        nonuniversals: [
+          { id: 1, deliveryType: '', deliveryWarehouse: '' },
+          { id: 2, deliveryType: '', deliveryWarehouse: '' }
+        ]
       },
       rules: {
         deliveryQuantity: { required: true, message: '请输入交割数量', trigger: 'blur' },
         standardWeight: { required: true, message: '请先输入交割数量', trigger: 'change' },
         payment: { required: true, message: '请先输入交割数量', trigger: 'change' },
-        signsOfSpeculation: { required: true, message: '请选择投保标志', trigger: 'change' },
       },
-      signsOfSpeculationList: DELIVERY_INSURE_FLAG
+      deliveryTypeList: DELIVERY_TYPE
+    }
+  },
+  computed: {
+    // 可选择意向库
+    isOptionalIntentionWarehouse() {
+      return this.varietyTbInfo.optional_intention_warehouse === 'Y'
     }
   },
   mounted() {
     if (this.$route.query.missionCode) {
       // eslint-disable-next-line no-unused-vars
       const { remarks,...rest } = this.$parent.$parent.getFormDetailInfo() || {}
-      this.form = { ...this.form, ...rest }
+      this.form = {
+        ...this.form,
+        ...rest,
+        nonuniversals: rest.nonuniversals.map(item => ({ ...item, uuid:`uuid-${++uuid}` }))
+      }
     }
   },
   methods: {

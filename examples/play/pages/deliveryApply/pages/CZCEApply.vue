@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="top">
-      <buyer-focus-form
+      <BuyerFocusForm
         v-if="currentComponent === 'BuyerFocusForm'"
         ref="dynamicFormRef"
         :baseInfo="baseInfo"
@@ -9,7 +9,7 @@
         :isDetail="isDetail"
         :instInfo="instInfo"
         :deliveryWhList="deliveryWhList">
-      </buyer-focus-form>
+      </BuyerFocusForm>
       <template v-else>
         <el-form-item
           label="交割类型"

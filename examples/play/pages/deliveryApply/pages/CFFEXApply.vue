@@ -1,17 +1,20 @@
 <template>
   <div>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="top">
+    <el-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      size="small"
+      label-position="top">
       <el-form-item
         label="交割类型"
         prop="deliveryType">
         <el-select
           v-model="form.deliveryType"
-          :multiple="isBuyer"
-          :disabled="isDetail"
+          disabled
           :popper-append-to-body="false"
           popper-class="custom_poper_class"
-          style="width: 300px"
-          @change="handleDeliveryTypeChange">
+          style="width: 300px">
           <el-option
             v-for="item in deliveryTypeList"
             :key="item.value"
@@ -41,31 +44,26 @@
 </template>
 
 <script>
-import SellerScrollForm from '../components/GFEX/SellerScrollForm.vue'
-import SellerFocusForm from '../components/GFEX/SellerFocusForm.vue'
-import BuyerScrollForm from '../components/GFEX/BuyerScrollForm.vue'
-import BuyerFocusForm from '../components/GFEX/BuyerFocusForm.vue'
+import BuyerForm from '../components/CFFEX/BuyerForm.vue'
+import SellerForm from '../components/CFFEX/SellerForm.vue'
 import mixins from '../util/mixins'
-import { DELIVERY_TYPE } from '../util'
 export default {
   components: {
-    SellerScrollForm,
-    SellerFocusForm,
-    BuyerScrollForm,
-    BuyerFocusForm
+    BuyerForm,
+    SellerForm
   },
   mixins: [mixins],
   data() {
     return {
       form: {
-        deliveryType: '',
+        deliveryType: 'B',
         remark: '',
         fileInfos: []
       },
       rules: {
         deliveryType: { required: true, message: '请选择', trigger: 'change' }
       },
-      deliveryTypeList: DELIVERY_TYPE
+      deliveryTypeList: [{ label: '国债', value: 'B' }]
     }
   },
   computed:{
@@ -73,12 +71,7 @@ export default {
       return this.baseInfo.deliveryDirection === '0'
     },
     currentComponent() {
-      if (this.baseInfo.deliveryTime === '1') {
-        // 集中交割
-        return this.isBuyer? 'BuyerFocusForm' : 'SellerFocusForm'
-      } else {
-        return this.isBuyer ? 'BuyerScrollForm' : 'SellerScrollForm'
-      }
+      return this.isBuyer ? 'BuyerForm' : 'SellerForm'
     },
     // 交割品种选择变化时车船版类型的值
     deliveryOfVehicleAndShipPlates() {
@@ -87,63 +80,44 @@ export default {
   },
   watch:{
     'baseInfo.deliveryDirection'() {
-      this.initDeliveryType()
+      this.form = {
+        deliveryType: 'B',
+        remark: '',
+        fileInfos: []
+      }
     }
   },
   mounted() {
     if (this.$route.query.missionCode) {
       this.setFieldValue()
-    } else {
-      this.initDeliveryType()
     }
   },
   methods: {
     getFormDetailInfo() {
-      const { gqsDeliverInformation, deliveryTime} = this.detailInfo || {}
-      // 广期所交割时间-单选
-      if (deliveryTime[0] !== this.baseInfo.deliveryTime) return {}
-      return this.isBuyer ? (gqsDeliverInformation?.gqsSBuyerDeliveryInformation || {}) :(gqsDeliverInformation?.gqsSellerDeliveryInformation || {})
+      const { zjsDeliverInformation } = this.detailInfo || {}
+      return this.isBuyer ? (zjsDeliverInformation?.zjsBuyerDeliveryInformation || {}) :(zjsDeliverInformation?.zjsSellerDeliveryInformation || {})
     },
     setFieldValue(){
-      const { gqsDeliverInformation, deliveryType, fileInfos} = this.detailInfo || {}
+      const { zjsDeliverInformation, fileInfos } = this.detailInfo || {}
       if (this.isBuyer) {
-        this.form.deliveryType = deliveryType || []
-        this.form.remarks = gqsDeliverInformation.gqsSBuyerDeliveryInformation.remarks || ''
+        this.form.remarks = zjsDeliverInformation.zjsBuyerDeliveryInformation.remarks || ''
       } else {
-        this.form.deliveryType = deliveryType[0] || ''
-        this.form.remarks = gqsDeliverInformation.gqsSellerDeliveryInformation.remarks || ''
+        this.form.remarks = zjsDeliverInformation.zjsSellerDeliveryInformation.remarks || ''
       }
       this.form.fileInfos = fileInfos?.filter(item => item.fileAttribute === 'F00150') || []
-    },
-    initDeliveryType() {
-      if (this.isBuyer) {
-        this.form.deliveryType = this.deliveryOfVehicleAndShipPlates === 'N' ? ['A'] : []
-      } else {
-        this.form.deliveryType = this.deliveryOfVehicleAndShipPlates === 'N' ? 'A': ''
-      }
-    },
-    handleDeliveryTypeChange() {
-      if (this.deliveryOfVehicleAndShipPlates === 'N' && this.form.deliveryType?.includes('C')) {
-        this.$Message.error('该品种无车(船)板交割。')
-        if (this.isBuyer) {
-          this.form.deliveryType = this.form.deliveryType.filter(v => v !== 'C')
-        } else {
-          this.form.deliveryType = 'A'
-        }
-      }
     },
     getFormData() {
       const result = this.$refs.dynamicFormRef.getFormData()
       const paramsData = { ...result,remarks: this.form.remarks }
-      const gqsDeliverInformation ={}
+      const zjsDeliverInformation ={}
       if (this.isBuyer) {
-        gqsDeliverInformation.gqsSBuyerDeliveryInformation = paramsData
+        zjsDeliverInformation.zjsBuyerDeliveryInformation = paramsData
       } else {
-        gqsDeliverInformation.gqsSellerDeliveryInformation = paramsData
+        zjsDeliverInformation.zjsSellerDeliveryInformation = paramsData
       }
       return {
         deliveryType: this.form.deliveryType,
-        gqsDeliverInformation,
+        zjsDeliverInformation,
         deliveryQuantity: result.deliveryQuantity,
         payment: result.payment
       }

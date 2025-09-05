@@ -72,7 +72,9 @@
           </el-table-column>
         </el-table>
         <!-- 超过10条则分页展示 -->
-        <div v-if="form.sellerDeliveryInformations.length > 10" class="pagination-wrap">
+        <div
+          v-if="form.sellerDeliveryInformations.length > 10"
+          class="pagination-wrap">
           <el-pagination
             background layout="total, sizes, prev, pager, next, jumper"
             :current-page="pageNum"
@@ -101,12 +103,29 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row :gutter="48">
+        <el-col :span="8">
+          <el-form-item
+            label="投保标志"
+            prop="signs0fSpeculation">
+            <el-radio-group
+              v-model="form.signsOfSpeculation"
+              :disabled="isDetail">
+              <el-radio
+                v-for="item in signsOfSpeculationList"
+                :key="item.value"
+                :label="item.value">{{ item.label }}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script>
 import ExcelUpload from '../ExcelUpload.vue'
+import { DELIVERY_INSURE_FLAG } from '../..util'
 let uuid = 1
 export default {
   props: {
@@ -145,13 +164,15 @@ export default {
         standardWeight: '',
         payment: '',
         deliveryQuantity: '',
+        signsOfSpeculation: '',
       },
       rules: {
         sellerDeliveryInformations: { required: true, message: '请计算标准重量', trigger: 'change' },
         standardWeight: { required: true, message: '请计算标准重量', trigger: 'change' },
         payment: { required: true, message: '请计算估算货款', trigger: 'change' },
-        field3: { required: true, message: '请选择', trigger: 'change' },
+        signsOfSpeculation: { required: true, message: '请选择投保标志', trigger: 'change' },
       },
+      signsOfSpeculationList: DELIVERY_INSURE_FLAG,
       pageNum: 1,
       pageSize: 10,
       pageSizeList: [10, 20, 50, 100],
@@ -181,8 +202,8 @@ export default {
     if (this.$route.query.missionCode) {
       // eslint-disable-next-line no-unused-vars
       const { remarks,...rest } = this.$parent.$parent.getFormDetailInfo() || {}
-      this.form = { ...this.form, ...rest }
-      if (rest.sellerDeliveryInformations && rest.sellerDeliveryInformations.length > 0) {
+      this.form = { ...this.form,...rest}
+      if (rest.sellerDeliveryInformations &&rest.sellerDeliveryInformations.length > 0) {
         this.form.sellerDeliveryInformations = rest.sellerDeliveryInformations.map(item => ({ ...item, uuid:`uuid-${++uuid}`}))
       }
     }
@@ -281,7 +302,7 @@ export default {
         return
       }
       this.form.sellerDeliveryInformations = this.form.sellerDeliveryInformations.filter(v => v.uuid !== record.uuid)
-      if (this.form.sellerDeliveryInformations.length % this.pageSize === 0 && this.pageNum >1) {
+      if (this.form.sellerDeliveryInformations.length % this.pageSize === 0 && this.pageNum > 1) {
         this.pageNum -= 1
       }
     },
