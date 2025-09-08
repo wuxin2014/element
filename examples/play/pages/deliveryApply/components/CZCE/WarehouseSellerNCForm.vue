@@ -11,33 +11,45 @@
     </div>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="top">
       <div style="padding-bottom: 16px">
-        <el-table border :data="renderList" row-key="uuid" :header-cell-style="{ background: '#F5F6F9' }"
-          :summary-method="getSummaries" show-summary class="table-show-summary-wrapper">
-          <el-table-column type="index" label="序号" align="center" width="70">
+        <el-table
+          border
+          :data="renderList"
+          :header-cell-style="{ background: '#F5F6F9' }"
+          :summary-method="getSummaries"
+          show-summary
+          class="table-show-summary-wrapper">
+          <el-table-column
+            type="index"
+            label="序号"
+            align="center"
+            width="70">
             <template slot-scope="scope">
-              <span>{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
+              <span>{{ (currentPage - 1) * pageSize + scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="warehourseNumber" label="仓单号" align="center">
+          <el-table-column
+            prop="warehouseNumber"
+            label="仓单号"
+            align="center">
             <template slot-scope="scope">
               <el-form-item
-                :prop="'tableList.' + scope.$index + '.warehourseNumber'"
+                :prop="'tableList.' + scope.$index + '.warehouseNumber'"
                 :rules="{ required: true, validator: validateWhRcpNo, record: scope.row, trigger: ['blur', 'change'] }"
               >
-                <el-input v-model="scope.row.warehourseNumber" :disabled="isDetail" placeholder="请输入" style="width: 100%" />
+                <el-input v-model="scope.row.warehouseNumber" :disabled="isDetail" placeholder="请输入" style="width: 100%" />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="qty" label="数量(手)" align="center">
+          <el-table-column prop="numberOfHands" label="数量(手)" align="center">
             <template slot-scope="scope">
               <el-form-item
-                :prop="'tableList.' + scope.$index + '.qty'"
+                :prop="'tableList.' + scope.$index + '.numberOfHands'"
                 :rules="{ required: true, validator: validateDeliveryAmount, record: scope.row, trigger: ['blur', 'change'] }">
-                <el-input v-model="scope.row.qty" :disabled="isDetail" placeholder="请输入" style="width: 100%" />
+                <el-input v-model="scope.row.numberOfHands" :disabled="isDetail" placeholder="请输入" style="width: 100%" />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="qtyz" label="数量(张)" align="center">
+          <el-table-column prop="numberOfSheets" label="数量(张)" align="center">
           </el-table-column>
           <el-table-column v-if="!isDetail" prop="opt" label="操作" width="120px" align="center">
             <template slot-scope="{row}">
@@ -47,9 +59,15 @@
         </el-table>
         <!-- 超过10条则分页展示 -->
         <div v-if="form.tableList.length > 10" class="pagination-wrap">
-          <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="pageNum"
-            :page-size="pageSize" :page-sizes="pageSizeList" :total="form.tableList.length"
-            @current-change="handlePageNumChange" @size-change="handleSizeChange">
+          <el-pagination
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :page-sizes="pageSizeList"
+            :total="form.tableList.length"
+            @current-change="handlePageNumChange"
+            @size-change="handleSizeChange">
           </el-pagination>
         </div>
       </div>
@@ -70,17 +88,17 @@
           </el-form-item>
         </el-col>
         <el-col :span="9">
-          <el-form-item label="最后交易日是否申报冻结数量" prop="field3">
-            <el-radio-group v-model="form.field3" :disabled="isDetail" @change="handleRadioChange">
+          <el-form-item label="最后交易日是否申报冻结数量" prop="finalReturn">
+            <el-radio-group v-model="form.finalReturn" :disabled="isDetail" @change="handleRadioChange">
               <el-radio label="是"></el-radio>
               <el-radio label="否"></el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
         <el-col :span="9">
-          <el-form-item label="申报冻结数量" prop="field4"
-            :rules="{ required: form.field3 === '是', pattern: /^[1-9]\d*$/, message: '请输入正整数', trigger: 'blur' }">
-            <el-input v-model="form.field4" :disabled="isDetail || form.field3 !== '是'" placeholder="请输入">
+          <el-form-item label="申报冻结数量" prop="declarationFreeze"
+            :rules="{ required: form.finalReturn === '是', pattern: /^[1-9]\d*$/, message: '请输入正整数', trigger: 'blur' }">
+            <el-input v-model="form.declarationFreeze" :disabled="isDetail || form.finalReturn !== '是'" placeholder="请输入">
               <template slot="append">张</template>
             </el-input>
           </el-form-item>
@@ -91,7 +109,8 @@
 </template>
 
 <script>
-import ExcelUpload from './ExcelUpload.vue'
+import ExcelUpload from '../ExcelUpload.vue'
+import { hasDuplicateField } from '../../util'
 let uuid = 1
 export default {
   props: {
@@ -121,49 +140,50 @@ export default {
         tableList: [
           {
             uuid: `uuid-${uuid}`,
-            warehourseNumber: '',
-            qty: '',
-            qtyz: ''
+            warehouseNumber: '',
+            numberOfHands: '',
+            numberOfSheets: ''
           }
         ],
         standardWeight: '',
         payment: '',
-        field3: '',
-        field4: '',
+        deliveryQuantity: '',
+        finalReturn: '',
+        declarationFreeze: '',
       },
       rules: {
         tableList: { required: true, message: '请计算标准重量', trigger: 'change' },
         standardWeight: { required: true, message: '请计算标准重量', trigger: 'change' },
         payment: { required: true, message: '请计算估算货款', trigger: 'change' },
-        field3: { required: true, message: '请选择', trigger: 'change' },
+        finalReturn: { required: true, message: '请选择', trigger: 'change' },
       },
-      pageNum: 1, //初始页码
+      currentPage: 1, //初始页码
       pageSize: 10,//每页条数
       pageSizeList: [10, 20, 50, 100],
       exportLoading: false
     }
   },
   computed: {
+    deliverUnitHand() {
+      return this.varietyTbInfo.delivery_unit_hand
+    },
     renderList() {
-      const startIndex = (this.pageNum - 1) * this.pageSize;
-      const endIndex = this.pageNum * this.pageSize;
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = this.currentPage * this.pageSize;
       return this.form.tableList.slice(startIndex, endIndex);
     },
-    deliverUnitHand() {
-      return this.varietyTbInfo.delivery_unit_hand || 1
-    },
     lastSettlePrice() {
-      return this.instInfo.last_settle_price || 10
+      return this.instInfo.last_settle_price
     },
-    varietyCode() {
-      return this.baseInfo.variety_code || 'AP'
-    }
+    deliveryVariety() {
+      return this.baseInfo.deliveryVariety
+    },
   },
   methods: {
     validateWhRcpNo(rule, value, callback) {
-      value = rule.record.warehourseNumber
+      value = rule.record.warehouseNumber
       // 对应品种代码(大小写均可)+13位数字
-      const regex = new RegExp('^' + this.varietyCode + '[0-9]{13}$', 'gi')
+      const regex = new RegExp('^' + this.deliveryVariety + '[0-9]{13}$', 'gi')
       if (!value || !regex.test(value)) {
         callback(new Error('请输入正确仓单编号'))
       } else {
@@ -171,19 +191,19 @@ export default {
       }
     },
     validateDeliveryAmount(rule, value, callback) {
-      value = rule.record.qty
+      value = rule.record.numberOfHands
       const regex = /^[1-9]\d*$/
       if (!value) {
-        rule.record.qtyz = ''
+        rule.record.numberOfSheets = ''
         callback(new Error('请输入数量'))
       } else if (!regex.test(value)) {
-        rule.record.qtyz = ''
+        rule.record.numberOfSheets = ''
         callback(new Error('数量需为正整数'))
       } else if (value % this.deliverUnitHand !== 0) {
-        rule.record.qtyz = ''
+        rule.record.numberOfSheets = ''
         callback(new Error(`请输入交割单位:${this.deliverUnitHand} 的整数倍`))
       } else {
-        rule.record.qtyz = value / this.deliverUnitHand
+        rule.record.numberOfSheets = value / this.deliverUnitHand
         callback()
       }
     },
@@ -205,19 +225,19 @@ export default {
       result = result.map(item => {
         return {
           ...item,
-          warehourseNumber: item.warehourseNumber || '',
-          qty: item.qty || '',
-          qtyz: item.qty ? item.qty / this.deliverUnitHand : '',
+          warehouseNumber: item.warehouseNumber || '',
+          numberOfHands: item.numberOfHands || '',
+          numberOfSheets: item.numberOfHands ? item.numberOfHands / this.deliverUnitHand : '',
           uuid: `uuid-${++uuid}`,
         }
       })
       // TODO 容易犯错的地方, 正则不能提出循环外,否则会出问题
       for (const item of result) {
-        const whRegex = new RegExp('^' + this.varietyCode + '[0-9]{13}$', 'gi')
-        if (item.warehourseNumber && !whRegex.test(item.warehourseNumber)) {
+        const whRegex = new RegExp('^' + this.deliveryVariety + '[0-9]{13}$', 'gi')
+        if (item.warehouseNumber && !whRegex.test(item.warehouseNumber)) {
           return this.$message.error('请输入正确仓单号。')
         }
-        if (item.gty && (item.qty % this.deliverUnitHand !== 0)) {
+        if (item.numberOfHands && (item.numberOfHands % this.deliverUnitHand !== 0)) {
           return this.$message.error(`请输入交割单位:${this.deliverUnitHand}的整数倍。`)
         }
       }
@@ -259,9 +279,9 @@ export default {
     handleAdd() {
       this.form.tableList.push({
         uuid: `uuid-${++uuid}`,
-        warehourseNumber: '',
-        qty: '',
-        qtyz: ''
+        warehouseNumber: '',
+        numberOfHands: '',
+        numberOfSheets: ''
       })
     },
     handleDel(record) {
@@ -270,15 +290,12 @@ export default {
         return
       }
       this.form.tableList = this.form.tableList.filter(v => v.uuid !== record.uuid)
-      if (this.renderList.length === 0 && this.pageNum > 1) {
-        this.pageNum -= 1
-      }
     },
     handlePageNumChange(val) {
-      this.pageNum = val
+      this.currentPage = val
     },
     handleSizeChange(val) {
-      this.pageNum = 1
+      this.currentPage = 1
       this.pageSize = val
     },
     getSummaries(param) {
@@ -289,7 +306,7 @@ export default {
           sums[index] = '总计'
           return
         }
-        if (['warehourseNumber'].includes(column.property)) {
+        if (['warehouseNumber'].includes(column.property)) {
           sums[index] = '--/--'
           return
         }
@@ -298,30 +315,41 @@ export default {
           return
         }
         if (this.form.tableList.length) {
-          // sums[index] = this.form.tableList.reduce((prev, curr) => {
-          //   const value = curr[column.property] ? Number(delcommafy(curr[column.property])) : ''
-          //   if (!isNaN(value)) {
-          //     return bigNumberAdd(prev, delcommafy(curr[column.property]))
-          //   } else {
-          //     return prev
-          //   }
-          // }, 0)
+          sums[index] = this.form.tableList.reduce((prev, curr) => {
+            const value = curr[column.property]
+            if (!isNaN(value)) {
+              return bigNumberAdd(prev, value)
+            } else {
+              return prev
+            }
+          }, 0)
           sums[index] = sums[index] || ''
         } else {
           sums[index] = ''
         }
       })
-      // sums.forEach((item, index) => {
-      //   if (item && !isNaN(Number(item))) {
-      //     this.form.standardWeight = sums[index] * this.deliverUnitHand
-      //     this.form.payment = sums[index] * this.deliverUnitHand * this.lastSettlePrice // 标准重量*交割月合约最新结算价
-      //     sums[index] = commafy(sums[index]) // 千位符展示
-      //   }
-      // })
+      sums.forEach((item,index) => {
+        if (item && !isNaN(item)) {
+          if (index === 3 && !this.isDetail) {
+            // 标准重量=交割单位(数量)*张数
+            this.form.standardWeight = this.deliveryUnitAmount * sums[index]
+            // 估算货款=标准重量*交割月合约最新结算价
+            this.form.payment = (this.form.standardWeight * this.lastSettlePrice).toFixed(2)
+            this.form.deliveryQuantity = sums[index]
+          }
+          sums[index] = commafy(sums[index]) // 千位符展示
+        } else {
+          if (index === 3 && !this.isDetail) {
+            this.form.standardWeight = ''
+            this.form.payment = ''
+            this.form.deliveryQuantity = ''
+          }
+        }
+      })
       return sums
     },
     handleRadioChange() {
-      if (this.form.field3 === '是') {
+      if (this.form.finalReturn === '是') {
         this.$messageBox.alert('请确定意向仓单无权利瑕疵,如申报冻结仓单处于折抵状态,请提交交割解折申请,如处于作为保证金状态,请提交解除作为保证金申请。', '提示', {
           confirmButtonText: '确认',
           showClose: false,
@@ -330,7 +358,7 @@ export default {
         }).then(() => {
         })
       } else {
-        this.form.field4 = ''
+        this.form.declarationFreeze = ''
       }
     },
     resetForm() {
@@ -339,7 +367,7 @@ export default {
     validateForm(callback) {
       this.$refs.formRef.validate((valid) => {
         if (valid) {
-          if (hasDuplicateField(this.form.tableList, 'warehourseNumber')) {
+          if (hasDuplicateField(this.form.tableList, 'warehouseNumber')) {
             this.$message.error('表格内容有重复,请确认调整后重新录入。')
             return
           }

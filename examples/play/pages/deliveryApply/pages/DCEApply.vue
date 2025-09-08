@@ -182,6 +182,9 @@ export default {
       }
       this.clearSellerScrol1VehicleYData()
     },
+    clearSellerScrollVehicleYData() {
+      this.$refs.dynamicFormRef?.clearListData()
+    },
     getFormData() {
       const result = this.$refs.dynamicFormRef.getFormData()
       const paramsData = { ...result, remarks: this.form.remarks }

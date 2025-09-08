@@ -166,6 +166,9 @@ export default {
     }
   },
   methods: {
+    clearListData() {
+      this.form.sellerDeliveryInformations = []
+    },
     handleAdd() {
       // 校验是否有已添加信息,若存在则弹框提示“交易所数据实时更新,需重新填写数据。”【确认]:进入添加/修改页
       if (this.form.sellerDeliveryInformations.length > 0) {
