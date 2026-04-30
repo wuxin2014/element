@@ -48,9 +48,9 @@
 
     methods: {
       processIndex(index, activeIndex, length) {
-        if (activeIndex === 0 && index === length - 1) {
+        if (activeIndex === 0 && index === length - 1) { // 左边界处理
           return -1; // 放置到展示台上最左侧
-        } else if (activeIndex === length - 1 && index === 0) {
+        } else if (activeIndex === length - 1 && index === 0) { // 右边界处理
           return length; // 放置到展示台上最右侧
         } else if (index < activeIndex - 1 && activeIndex - index >= length / 2) {
           return length + 1; // 放置到右侧+1(台外)
@@ -75,10 +75,14 @@
       calcCardTranslate(index, activeIndex) {
         const parentWidth = this.$parent.$el.offsetWidth;
         if (this.inStage) {
-          return parentWidth * ((2 - CARD_SCALE) * (index - activeIndex) + 1) / 4; // 展示台上平移距离
+          // 这个公式用于计算处于舞台区域内的卡片（如 activeIndex -1, activeIndex, activeIndex +1）的位置
+          // 设 d = index - activeIndex，则 d ∈ { -1, 0, 1 }, 代码返回 W/4，所以父容器必须 transform: translateX(-W/4) 来抵消，使其居中
+          return parentWidth * ((2 - CARD_SCALE) * (index - activeIndex) + 1) / 4;
         } else if (index < activeIndex) {
+          // 舞台外的卡片（堆在左侧）
           return -(1 + CARD_SCALE) * parentWidth / 4; // 展示台外左侧(不可见)平移距离
         } else {
+          // 舞台外的卡片（堆在右侧）
           return (3 + CARD_SCALE) * parentWidth / 4; // 展示台外右侧(不可见)平移距离
         }
       },

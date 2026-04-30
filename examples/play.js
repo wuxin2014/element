@@ -6,7 +6,7 @@ import 'packages/theme-chalk/src/index.scss';
 // import App from './play/pages/TimePickerDemo2'
 // import App from './play/pages/SelectDemo'
 // import App from './play/pages/DialogDemo1'
-import App from './play/pages/collapseTagsDemo' // 3D旋转轮播
+import App from './play/pages/drag/Draw2.vue' // 3D旋转轮播
 // import App from './play/pages/DatePickerDemo'
 // import App from './play/pages/TableFilterDemo'
 
